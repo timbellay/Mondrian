@@ -41,7 +41,7 @@ public enum Theme {
 }
 
 public enum Font {
-	case button, titleText, bodyText, smalltext
+	case button, titleText, bodyText, smalltext, tabBarText
 	
 	public func create() -> UIFont {
 		switch self {
@@ -53,6 +53,8 @@ public enum Font {
 			return UIFont.systemFontOfSize(17)
 		case smalltext:
 			return UIFont.systemFontOfSize(12)
+		case tabBarText:
+			return UIFont.systemFontOfSize(10)
 		}
 	}
 }

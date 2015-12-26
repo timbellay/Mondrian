@@ -8,29 +8,59 @@
 
 import UIKit
 
-public enum Button {
-	case Default, transparent, transparentWithOutline
+// Buttons can have outline (typically if transparent) or not.
+
+public enum ButtonLabelType {
+	case Left, Right, Up, Down, None
+}
+
+public struct Button {
+	var view = UIView()
+	var mainSV: UIStackView?
+	var type: ButtonLabelType = .None
+	var image: UIImage?
+	var text: String?
+	var views = [UIView]()
 	
-	public func create() -> UIButton {
-		var button = UIButton(type: .System)
-		switch self {
-		case Default:
-			button.backgroundColor = Color.grayBackground.create()
-			button.setTitle("Button", forState: .Normal)
-			button.setTitleColor(Color.blueLink.create(), forState: .Normal)
-			button.titleLabel?.font = Font.button.create()
-			button.layer.cornerRadius = 5
-		case transparent:
-			button.backgroundColor = Color.clear.create()
-			button.setTitle("Button", forState: .Normal)
-			button.setTitleColor(Color.blueLink.create(), forState: .Normal)
-			button.titleLabel?.font = Font.button.create()
-			button.layer.cornerRadius = 5
-		case .transparentWithOutline:
-			button = Button.transparent.create()
-			button.layer.borderColor = button.titleLabel?.textColor.CGColor
-			button.layer.borderWidth = 1
+	public init(theme: Theme, imageName: String, text: String, type: ButtonLabelType) {
+		self.type = type
+		let font = Font.tabBarText.create()
+		var label = UILabel()
+		if theme == .light {
+			let gray = Color.grayBackground.create()
+			view.backgroundColor = gray
+			label = UILabel(text: text, font: font, textColor: Color.blueLink.create(), labelColor: gray)
+		} else {
+			view.backgroundColor = .clearColor()
+			label = UILabel(text: text, font: font, textColor: .whiteColor(), labelColor: .clearColor())
 		}
-		return button
+		
+		if let image = UIImage(named: imageName) {
+			let imageView = UIImageView(image: image)
+			imageView.contentMode = .ScaleAspectFit
+			switch type {
+			case .Left:
+				mainSV = makeHorizontalSV(view)
+				views.append(label)
+				views.append(imageView)
+			case .Right:
+				mainSV = makeHorizontalSV(view)
+				views.append(imageView)
+				views.append(label)
+			case .Up:
+				mainSV = makeVerticalSV(view)
+				views.append(label)
+				views.append(imageView)
+			case .Down:
+				mainSV = makeVerticalSV(view)
+				views.append(imageView)
+				views.append(label)
+			case .None:
+				mainSV = makeVerticalSV(view)
+				views.append(label)
+			}
+		}
+		views.forEach({mainSV?.addArrangedSubview($0)})
+//		view.layer.cornerRadius = 5
 	}
 }
