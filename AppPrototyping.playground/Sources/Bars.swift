@@ -201,7 +201,6 @@ public struct NavigationBar {
 	public init(frame: CGRect, theme: Theme, title: String) {
 		view.frame = CGRectMake(0, 0, frame.size.width, 44)
 		self.title = title
-		
 		mainSV = makeHorizontalSV(view)
 		view.addSubview(mainSV!)
 		let gray = Color.grayBackground.create()
@@ -258,30 +257,29 @@ public struct ToolBar {
 public struct TabBar {
 	public var view = UIView(frame: .zero)
 	public var buttons = [UIBarButtonItem]()
+	public var mainSV: UIStackView?
 	
 	public init(frame: CGRect, theme: Theme) {
 		view.frame = CGRectMake(0, 0, frame.size.width, 44)
+		mainSV = makeHorizontalSV(view)
+		view.addSubview(mainSV!)
+		
 		if theme == .light {
 			view.backgroundColor = Color.grayBackground.create()
+	
 		} else {
 			view.backgroundColor = .clearColor()
 		}
-		view.translatesAutoresizingMaskIntoConstraints = false
-		view.layer.borderColor = UIColor.redColor().CGColor
-		view.layer.borderWidth = 3
-						
-		let barButton0 = UITabBarItem(tabBarSystemItem: .More, tag: 0)
-//		let barButton1 = UITabBarItem(tabBarSystemItem: .Favorites, tag: 1)
-//		let barButton2 = UITabBarItem(tabBarSystemItem: .Featured, tag: 2)
-//		let barButton3 = UITabBarItem(tabBarSystemItem: .TopRated, tag: 3)
 		
-		let imageView = UIImageView(image: barButton0.image)
-		imageView.frame = CGRectMake(0, 0, 44, 44)
-		imageView.backgroundColor = .purpleColor()
-		print("image view frame: \(imageView.frame)")
-		barButton0.title = "Test"
-
-		view.addSubview(imageView)
+		let barButton0 = Button(theme: theme, imageName: "button", text: "Messaging", type: .Down)
+		let barButton1 = Button(theme: theme, imageName: "button", text: "My Data", type: .Down)
+		let barButton2 = Button(theme: theme, imageName: "button", text: "Info", type: .Down)
+		let barButton3 = Button(theme: theme, imageName: "button", text: "Settings", type: .Down)
+		mainSV?.addArrangedSubview(barButton0.view)
+		mainSV?.addArrangedSubview(barButton1.view)
+		mainSV?.addArrangedSubview(barButton2.view)
+		mainSV?.addArrangedSubview(barButton3.view)
+		
 	
 	}
 }
