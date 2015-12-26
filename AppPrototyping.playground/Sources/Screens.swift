@@ -1,3 +1,4 @@
+
 //
 //  Screens.swift
 //
@@ -113,7 +114,6 @@ public struct Screen {
 		let statusBar = StatusBar(frame: view.frame, theme: .dark)
 		view.addSubview(statusBar.view)
 	}
-	
 	
 	public func splash(_name: String) {
 		if let splashImage = UIImage(named: _name) {

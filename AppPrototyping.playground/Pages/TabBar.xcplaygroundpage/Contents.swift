@@ -3,16 +3,11 @@
 import UIKit
 import XCPlayground
 
-let frame = Device.iPhone6Plus.frame()
-let view = UIView(frame: frame)
-
+let device = Device.iPhone6Plus
+let frame = device.frame()
 let tabBar = TabBar(frame: frame, theme: .light)
-view.addSubview(tabBar.view)
 
-
-XCPlayground.XCPlaygroundPage.currentPage.liveView = view
-view.frame = frame
-outlineViews([view], outlineColor: .blueColor())
-
+XCPlayground.XCPlaygroundPage.currentPage.liveView = tabBar.view
+outlineViews([tabBar.view], outlineColor: .blueColor())
 
 //: [Next](@next)

@@ -69,15 +69,11 @@ public struct StatusBar {
 			}
 		}
 	}
-	
-	public init(superView: UIView, theme: Theme) {
-		let frame = CGRectMake(0, 0, superView.frame.width, 20)
-		self.init(frame: frame, theme: theme)
-	}
-	
+
 	public init(frame: CGRect, theme: Theme) {
-		view.translatesAutoresizingMaskIntoConstraints = false
-		view.frame = frame
+		let width = frame.size.width
+		let height = CGFloat(20)
+		view.frame = CGRectMake(0, 0, width, height)
 		self.theme = theme
 		let smallFont = Font.smalltext.create()
 		let gray = Color.grayBackground.create()
@@ -203,7 +199,6 @@ public struct NavigationBar {
 	}
 	
 	public init(frame: CGRect, theme: Theme, title: String) {
-		view.translatesAutoresizingMaskIntoConstraints = false
 		view.frame = CGRectMake(0, 0, frame.size.width, 44)
 		self.title = title
 		
@@ -235,7 +230,6 @@ public struct ToolBar {
 	public var buttons = [UIBarButtonItem]()
 	
 	public init(frame: CGRect, theme: Theme) {
-		view.translatesAutoresizingMaskIntoConstraints = false
 		view.frame = CGRectMake(0, 0, frame.size.width, 44)
 
 		let spacer = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
