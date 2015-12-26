@@ -6,13 +6,14 @@
 
 # usage:
 
-`import UIKit
+```
+import UIKit
 import XCPlayground
 
 let device = Device.iPhone6
 var statusBar = StatusBar(frame: device.frame(), theme: .light)
-XCPlayground.XCPlaygroundPage.currentPage.liveView = statusBar.view`
-
+XCPlayground.XCPlaygroundPage.currentPage.liveView = statusBar.view
+```
 #Soon come:
 
 ##[Screens]
