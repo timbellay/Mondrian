@@ -38,6 +38,13 @@ XCPlayground.XCPlaygroundPage.currentPage.liveView = statusBar.view
 - popovers, “new updates” and others
 - alertView including System Notifications used in app permission granting. 
 - activity indicators with animations
+- Date Pickers
+- Page Controls
+- Segmented Controls
+- Text Fields
+- Sliders
+- Steppers
+- Switches
 
 ##[Resources]
 - add open source icons as placeholders for default icons
