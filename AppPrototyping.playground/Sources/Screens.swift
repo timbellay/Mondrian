@@ -73,6 +73,32 @@ public enum Device {
 	}
 }
 
+class TableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+	
+	var tableView: UITableView!
+	let items = ["Hello 1", "Hello 2", "Hello 3"]
+	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		self.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
+		self.tableView = UITableView(frame:self.view.frame)
+		self.tableView!.dataSource = self
+		self.tableView!.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+		self.view.addSubview(self.tableView)
+		
+	}
+	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
+		return self.items.count;
+	}
+	
+	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
+		let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as UITableViewCell
+		cell.textLabel?.text = "\(self.items[indexPath.row])"
+		cell.backgroundColor = .purpleColor()
+		return cell
+	}
+}
+
 public struct Screen {
 	public var screenType: ScreenType = .splash
 	public var device: Device = .iPhone6
@@ -132,20 +158,23 @@ public struct Screen {
 		views.append(navBar.view)
 		let searchBar = SearchBar(frame: .zero, theme: theme)
 		views.append(searchBar.view)
-		let tableView = UITableView()
-		tableView.translatesAutoresizingMaskIntoConstraints = false
+		let tableVC = TableViewController()
+		tableVC.viewDidLoad()
+		tableVC.view.translatesAutoresizingMaskIntoConstraints = false
+		print("tableView: \(tableVC.view)")
+		
+		views.append(tableVC.view)
 		if theme == .light {
-			tableView.backgroundColor = Color.grayBackground.create()
+			tableVC.view.backgroundColor = Color.grayBackground.create()
 		} else {
-			tableView.backgroundColor = .clearColor()
+			tableVC.view.backgroundColor = .clearColor()
 		}
-		views.append(tableView)
 		let toolBar = ToolBar(frame: .zero, theme: theme)
 		views.append(toolBar.view)
 		let tabBar = TabBar(frame: .zero, theme: theme)
 		views.append(tabBar.view)
 		
-		let viewDict = [ "statusBar" : statusBar.view, "navBar" : navBar.view, "searchBar" : searchBar.view, "toolBar" : toolBar.view, "tableView" : tableView, "tabBar" : tabBar.view]
+		let viewDict = [ "statusBar" : statusBar.view, "navBar" : navBar.view, "searchBar" : searchBar.view, "toolBar" : toolBar.view, "tableView" : tableVC.view, "tabBar" : tabBar.view]
 		
 		let keys = Array(viewDict.keys)
 
@@ -156,13 +185,13 @@ public struct Screen {
 		let horizontalVL = keys.map{"|[\($0)]|"}
 		setConstraints(horizontalVL, views: viewDict)
 		var verticalVL = keys.map{"V:[\($0)(44)]"}
-		verticalVL[0] = "V:[statusBar(20)]"
-		verticalVL.removeAtIndex(4) // TODO remove this and add vertical height for each toolbar based on an enum. TB. case: status = 20, case: tab = 49, case tool = 44. TB.
-		print("views: \(verticalVL)")
+		verticalVL[0] = "V:[statusBar(20)]" // StatusBar height to 20 instead of 44.
+		verticalVL.removeAtIndex(4) // Remove tableView constraint. TODO remove this and add vertical height for each toolbar based on an enum. TB. case: status = 20, case: tab = 49, case tool = 44. TB.
+		print("verticalVL: \(verticalVL)")
 		setConstraints(verticalVL, views: viewDict)
 	}
 	
-	func setConstraints(visualLanguage: Array<String>, views: Dictionary<String, UIView>) {
+	func setConstraints(visualLanguage: Array<String>, views: Dictionary<String, AnyObject>) {
 		var layoutConstraints = [NSLayoutConstraint]()
 		visualLanguage.forEach({
 			layoutConstraints += NSLayoutConstraint.constraintsWithVisualFormat($0, options: [], metrics: nil, views: views)

@@ -14,16 +14,13 @@ import XCPlayground
 // TODO: ability to make custome tableview cells. Start with enum of basic types.
 
 let device = Device.iPhone5s
+
 let screen = Screen(device: device, type: .list, theme: .dark)
 screen.view.frame
 
 XCPlayground.XCPlaygroundPage.currentPage.liveView = screen.view
 XCPlaygroundPage.currentPage.needsIndefiniteExecution = true
-screen.view.frame
-device.frame()
-screen.view.frame = device.frame()
 
-//screen.outlineViews([screen.topStackView!], outlineColor: UIColor.blackColor())
 //screen.views[0].hidden = true
 //screen.views[1].hidden = true
 //screen.views[2].hidden = true
