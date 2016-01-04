@@ -7,5 +7,6 @@
         <page name='NavigationBar'/>
         <page name='TabBar'/>
         <page name='TableViewCell'/>
+        <page name='ScrollView'/>
     </pages>
 </playground>
