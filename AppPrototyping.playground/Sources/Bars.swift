@@ -298,35 +298,3 @@ public struct SearchBar {
 		view.showsCancelButton = true
 	}
 }
-
-public func makeHorizontalSV(view: UIView) -> UIStackView {
-  return makeSV(view, axis: .Horizontal)
-}
-
-public func makeVerticalSV(view: UIView) -> UIStackView {
-	return makeSV(view, axis: .Vertical)
-}
-
-func makeSV(view: UIView, axis: UILayoutConstraintAxis) -> UIStackView {
-	let stackView = UIStackView(frame: .zero)
-	stackView.translatesAutoresizingMaskIntoConstraints = false
-	stackView.axis = axis
-	stackView.alignment = .Center
-	stackView.distribution = .EqualCentering
-	stackView.layoutMarginsRelativeArrangement = true
-	
-	var layoutConstraints = [NSLayoutConstraint]()
-	let views = ["stackView" : stackView]
-	
-	if let v = view as? UIStackView {
-		v.addArrangedSubview(stackView)
-	} else {
-		// if the parent view is not a stackview then we can set
-		view.addSubview(stackView)
-		layoutConstraints += NSLayoutConstraint.constraintsWithVisualFormat("|[stackView]|", options: [], metrics: nil, views: views)
-	}
-	layoutConstraints += NSLayoutConstraint.constraintsWithVisualFormat("V:|[stackView]|", options: [], metrics: nil, views: views)
-	NSLayoutConstraint.activateConstraints(layoutConstraints)
-	
-	return stackView
-}

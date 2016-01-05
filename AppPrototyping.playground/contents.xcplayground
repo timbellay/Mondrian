@@ -1,12 +1,2 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<playground version='6.0' target-platform='ios' display-mode='raw'>
-    <pages>
-        <page name='Splash Example'/>
-        <page name='List Example'/>
-        <page name='StatusBar'/>
-        <page name='NavigationBar'/>
-        <page name='TabBar'/>
-        <page name='TableViewCell'/>
-        <page name='ScrollView'/>
-    </pages>
-</playground>
+<playground version='6.0' target-platform='ios' display-mode='raw'/>

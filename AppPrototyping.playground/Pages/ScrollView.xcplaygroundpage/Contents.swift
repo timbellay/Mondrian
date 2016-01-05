@@ -11,11 +11,11 @@ class ListController: UIViewController, UITableViewDelegate, UITableViewDataSour
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		self.view.frame = Device.iPhone5.frame()
-		self.tableView = UITableView(frame: self.view.frame)
-		self.tableView!.dataSource = self
-		self.tableView!.translatesAutoresizingMaskIntoConstraints = false
-		self.tableView!.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+		view.frame = Device.iPhone5.frame()
+		tableView = UITableView(frame: self.view.frame)
+		tableView.dataSource = self
+		tableView.translatesAutoresizingMaskIntoConstraints = false
+		tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
 		self.view.addSubview(self.tableView)
 	}
 	
@@ -31,44 +31,49 @@ class ListController: UIViewController, UITableViewDelegate, UITableViewDataSour
 	}
 }
 
-class ScrollController: UIScrollViewDelegate {
-	var scrollView: UIScrollView?
-	init() {
+class ScrollController: NSObject, UIScrollViewDelegate {
+//	var scrollView: UIScrollView!
+	var scrollView = UIView(frame: .zero)
+	init(frame: CGRect) {
+		
+//		scrollView = UIScrollView(frame: frame)
+//		scrollView.contentSize = frame.size
+//		super.init()
+//		scrollView.delegate = self
+		
+		scrollView.frame = frame
+		scrollView.backgroundColor = .purpleColor()
+		scrollView.translatesAutoresizingMaskIntoConstraints = false
 		
 	}
-	override func scrollViewDidScroll(scrollView: UIScrollView) {
-		
+	func scrollViewDidScroll(scrollView: UIScrollView) {
+		print("Scrolling")
 	}
 }
 
-
-
-let device = Device.iPhone5
+let device = Device.iPhone6
 let frame = device.frame()
 let view = UIView(frame: frame)
-view.backgroundColor = .purpleColor()
-let scrollView = UIScrollView(frame: .zero)
-scrollView.contentSize = frame.size
-scrollView.pagingEnabled = true
-scrollView.backgroundColor = .whiteColor()
-
-let subview = UIView(frame: CGRectMake(0,0,44,44))
-subview.backgroundColor = .orangeColor()
-//scrollView.addSubview(subview)
-
-
 let sv = makeVerticalSV(view)
-let statusbar = StatusBar(frame: device.frame(), theme: .dark)
-sv.addArrangedSubview(statusbar.view)
-sv.addArrangedSubview(scrollView)
-sv.addArrangedSubview(subview)
-view.frame.size
-sv.frame.size
-scrollView.frame.size
-subview.superview
+let statusBar = StatusBar(frame: frame, theme: .dark)
+sv.addArrangedSubview(statusBar.view)
+horizontalStrechToParentView(statusBar.view)
+
+let navbar = NavigationBar(frame: frame, theme: .dark, title: "Hello")
+sv.addArrangedSubview(navbar.view)
+//horizontalStrechToParentView(navbar.view)
+navbar.view
+
+
+let svc = ScrollController(frame: CGRectMake(0, 0, frame.width, 200))
+sv.addArrangedSubview(svc.scrollView)
+svc.scrollView
+horizontalStrechToParentView(svc.scrollView)
+
 
 XCPlaygroundPage.currentPage.liveView = view
-scrollView.contentSize
+XCPlaygroundPage.currentPage.needsIndefiniteExecution = true
+view.frame = frame
 
-outlineViews([view], outlineColor: .whiteColor())
+//outlineViews([view], outlineColor: .whiteColor())
 //: [Next](@next)

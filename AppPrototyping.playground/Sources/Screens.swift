@@ -190,12 +190,4 @@ public struct Screen {
 		print("verticalVL: \(verticalVL)")
 		setConstraints(verticalVL, views: viewDict)
 	}
-	
-	func setConstraints(visualLanguage: Array<String>, views: Dictionary<String, AnyObject>) {
-		var layoutConstraints = [NSLayoutConstraint]()
-		visualLanguage.forEach({
-			layoutConstraints += NSLayoutConstraint.constraintsWithVisualFormat($0, options: [], metrics: nil, views: views)
-		})
-		NSLayoutConstraint.activateConstraints(layoutConstraints)
-	}
 }
