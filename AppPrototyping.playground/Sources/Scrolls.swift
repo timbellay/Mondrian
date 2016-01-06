@@ -21,7 +21,8 @@ public class ScrollView: NSObject, UIScrollViewDelegate {
 	public let view = UIScrollView(frame: .zero)
 	let device: Device?
 	var scrollDirection: ScrollDirection = .Both
-	
+	var showHorizontalScroller = true
+	var showVerticalScroller = true
 	public init(device: Device, imageName: String?, scrollDirection: ScrollDirection, width: CGFloat?, height: CGFloat?) {
 		self.device = device
 		self.scrollDirection = scrollDirection
@@ -36,12 +37,14 @@ public class ScrollView: NSObject, UIScrollViewDelegate {
 		switch scrollDirection {
 		case .None:
 			view.scrollEnabled = false
+			showHorizontalScroller = false
+			showVerticalScroller = false
 		case .Both:
 			break
 		case .Vertical:
-			break
+			showHorizontalScroller = false
 		case .Horizontal:
-			break
+			showVerticalScroller = false
 		}
 		
 		if let widthAnchor = width {
@@ -54,12 +57,14 @@ public class ScrollView: NSObject, UIScrollViewDelegate {
 			view.heightAnchor.constraintEqualToConstant(heightAnchor).active = true
 		} else {
 			view.heightAnchor.constraintEqualToConstant(44).active = true
-			//			print("set scrollview height to 300")
+			print("WARNING: set scrollview height to minimum height: 44")
 		}
-		
-		//		super.init()
-		//		view.delegate = self
 		view.translatesAutoresizingMaskIntoConstraints = false
+
+		super.init()
+		view.delegate = self
+		
+		self.drawScrollIndicators()
 	}
 	
 	public func scrollViewDidScroll(scrollView: UIScrollView) {
@@ -91,6 +96,41 @@ public class ScrollView: NSObject, UIScrollViewDelegate {
 			print("new center: \(center)")
 		}
 	}
+	
+	func drawScrollIndicators() {
+		// TODO: Implement me!
+		
+		// Research iOS behavior first
+		// Make two rounded rects based upon scroller bool properties
+		// Draw lengths to be size of view
+		// Draw position to be postion in content view
+	}
 }
 
+public class ListController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+	
+	var tableView: UITableView!
+	let items = ["Hello 1", "Hello 2", "Hello 3"]
+	
+	public override func viewDidLoad() {
+		super.viewDidLoad()
+		view.frame = Device.iPhone5.frame()
+		tableView = UITableView(frame: self.view.frame)
+		tableView.dataSource = self
+		tableView.translatesAutoresizingMaskIntoConstraints = false
+		tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+		self.view.addSubview(self.tableView)
+	}
+	
+	public func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
+		return self.items.count;
+	}
+	
+	public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
+		let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as UITableViewCell
+		cell.textLabel?.text = "\(self.items[indexPath.row])"
+		cell.backgroundColor = .purpleColor()
+		return cell
+	}
+}
 
