@@ -11,7 +11,7 @@ let statusBar = StatusBar(frame: frame, theme: .light)
 sv.addArrangedSubview(statusBar.view)
 horizontalStrechToParentView(statusBar.view)
 
-let svc = ScrollView(device: device, imageName: "splash", scrollDirection: .Both, width: nil, height: 500, showScrollers: true)
+let svc = ScrollView(device: device, imageName: "splash", scrollDirection: .Both, width: nil, height: 500)
 sv.addArrangedSubview(svc.view)
 svc.center()
 svc.scroll(.Left, amount: 100)
