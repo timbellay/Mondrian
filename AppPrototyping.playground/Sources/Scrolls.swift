@@ -29,7 +29,6 @@ public class ScrollView: NSObject, UIScrollViewDelegate {
 	
 	// scroller properties
 	var scrollDirection: ScrollDirection = .Both
-	var showScrollers = true
 	var showVerticalScroller = true
 	var showHorizontalScroller = true
 	var verticalScroller: UIView?
@@ -38,10 +37,9 @@ public class ScrollView: NSObject, UIScrollViewDelegate {
 	let scrollerThickness = 6 as CGFloat
 
 	
-	public init(device: Device, imageName: String?, scrollDirection: ScrollDirection, width: CGFloat?, height: CGFloat?, showScrollers: Bool) {
+	public init(device: Device, imageName: String?, scrollDirection: ScrollDirection, width: CGFloat?, height: CGFloat?) {
 		self.device = device
 		self.scrollDirection = scrollDirection
-		self.showScrollers = showScrollers
 		
 		// Setup view anchors.
 		if let widthAnchor = width {
@@ -78,33 +76,15 @@ public class ScrollView: NSObject, UIScrollViewDelegate {
 		
 		super.init()
 		view.delegate = self
-		
-		setupScrollers() // Warning: Only call setupScrollers() here, after content size and view anchors have been set.
-
-		switch scrollDirection {
-		case .None:
-			view.scrollEnabled = false
-			showHorizontalScroller = false
-			showVerticalScroller = false
-			self.showScrollers = false
-			verticalScroller = nil
-			horizontalScroller = nil
-		case .Both:
-			break
-		case .Vertical:
-			showHorizontalScroller = false
-			horizontalScroller = nil
-		case .Horizontal:
-			showVerticalScroller = false
-			verticalScroller = nil
-		}
 		view.translatesAutoresizingMaskIntoConstraints = false
 
+		setupScrollers()
 		updateScrollers()
 	}
 	
 	func setupScrollers() {
-		
+		print("Setting up scrollers NOW")
+
 		let verticalHeight = viewHeightAnchor! / contentHeight! * viewHeightAnchor! - (2 * scrollerOffset)
 		let horizontalHeight = viewWidthAnchor! / contentWidth! * viewWidthAnchor! - (2 * scrollerOffset)
 		
@@ -127,13 +107,30 @@ public class ScrollView: NSObject, UIScrollViewDelegate {
 		view.addSubview(verticalScroller!)
 		view.addSubview(horizontalScroller!)
 		
-		print("setup Scrollers")
+		switch scrollDirection {
+		case .None:
+			view.scrollEnabled = false
+			showHorizontalScroller = false
+			showVerticalScroller = false
+			verticalScroller?.removeFromSuperview()
+			horizontalScroller?.removeFromSuperview()
+			verticalScroller = nil
+			horizontalScroller = nil
+		case .Both:
+			break
+		case .Vertical:
+			showHorizontalScroller = false
+			horizontalScroller?.removeFromSuperview()
+			horizontalScroller = nil
+		case .Horizontal:
+			showVerticalScroller = false
+			verticalScroller?.removeFromSuperview()
+			verticalScroller = nil
+		}
 	}
 	
 	func updateScrollers() {
-		if !showScrollers {
-			return
-		}
+		
 		print("updating Scrollers NOW")
 		let contentFrame = view.subviews[0].frame
 
