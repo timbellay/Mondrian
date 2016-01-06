@@ -33,7 +33,7 @@ public class ScrollView: NSObject, UIScrollViewDelegate {
 	var showHorizontalScroller = true
 	var verticalScroller: UIView?
 	var horizontalScroller: UIView?
-	let scrollerOffset = 6 as CGFloat
+	let scrollerOffset = 4 as CGFloat
 	let scrollerThickness = 6 as CGFloat
 
 	
@@ -83,8 +83,6 @@ public class ScrollView: NSObject, UIScrollViewDelegate {
 	}
 	
 	func setupScrollers() {
-		print("Setting up scrollers NOW")
-
 		let verticalHeight = viewHeightAnchor! / contentHeight! * viewHeightAnchor! - (2 * scrollerOffset)
 		let horizontalHeight = viewWidthAnchor! / contentWidth! * viewWidthAnchor! - (2 * scrollerOffset)
 		
@@ -130,26 +128,20 @@ public class ScrollView: NSObject, UIScrollViewDelegate {
 	}
 	
 	func updateScrollers() {
-		
-		print("updating Scrollers NOW")
 		let contentFrame = view.subviews[0].frame
 
 		if let horizontal = horizontalScroller {
-			print("OLD horizontal frame: \(horizontal.frame)")
 			var scrollerFrame = horizontal.frame
 			let newX = (0 - contentFrame.origin.x) * (viewWidthAnchor! / contentWidth!) + scrollerOffset
 			scrollerFrame.origin.x = newX
 			horizontal.frame = scrollerFrame
-			print("NEW horizontal frame: \(horizontal.frame)")
 		}
 		
 		if let vertical = verticalScroller {
-			print("OLD vertical frame: \(vertical.frame)")
 			var scrollerFrame = vertical.frame
 			let newY = (0 - contentFrame.origin.y) * (viewHeightAnchor! / contentHeight!) + scrollerOffset
 			scrollerFrame.origin.y = newY
 			vertical.frame = scrollerFrame
-			print("NEW vertical frame: \(vertical.frame)")
 		}
 		
 	}
@@ -172,19 +164,29 @@ public class ScrollView: NSObject, UIScrollViewDelegate {
 		let subviews = view.subviews
 		for subview in subviews {
 			var center = subview.center
-			print("OLD center: \(center)")
 			switch direction {
 			case .Up:
 				center.y -= amount
+				if (center.y + (contentHeight! / 2) < viewHeightAnchor!) {
+					center.y = viewHeightAnchor! - (contentHeight! / 2)
+				}
 			case .Down:
 				center.y += amount
+				if (center.y - (contentHeight! / 2) > 0) {
+					center.y = (contentHeight! / 2)
+				}
 			case .Left:
 				center.x -= amount
+				if (center.x + (contentWidth! / 2) < viewWidthAnchor!) {
+					center.x = viewWidthAnchor! - (contentWidth! / 2)
+				}
 			case .Right:
 				center.x += amount
+				if (center.x - (contentWidth! / 2) > 0) {
+					center.x = (contentWidth! / 2)
+				}
 			}
 			subview.center = center
-			print("NEW center: \(center)")
 		}
 		setupScrollers()
 		updateScrollers()
