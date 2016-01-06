@@ -58,23 +58,3 @@ public enum Font {
 		}
 	}
 }
-
-public func outlineViews(views: [UIView], outlineColor: UIColor) {
-	views.forEach({
-		if let sv = $0 as? UIStackView {
-			let pb = sv.superview
-			let outlineView = UIView(frame: sv.bounds)
-			outlineView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0.15)
-			outlineView.layer.borderColor = UIColor.redColor().CGColor
-			outlineView.layer.borderWidth = 2
-			pb?.addSubview(outlineView)
-			print("adding stackview outline: \(outlineView) to superview: \(pb)")
-		} else {
-			$0.layer.borderWidth = 1
-			$0.layer.borderColor = outlineColor.CGColor
-			print("adding view outline")
-		}
-		let subViews = $0.subviews
-		outlineViews(subViews, outlineColor: outlineColor)
-	})
-}

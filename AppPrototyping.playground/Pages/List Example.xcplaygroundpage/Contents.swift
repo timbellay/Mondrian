@@ -33,17 +33,5 @@ screen.mainSV?.subviews.count
 //outlineViews(screen.views, outlineColor: .blueColor())
 
 
-var GlobalMainQueue: dispatch_queue_t {
-	return dispatch_get_main_queue()
-}
-
-//let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(3.0 * Double(NSEC_PER_SEC)))
-//dispatch_after(delayTime, GlobalMainQueue, { () -> Void in
-//	UIView.animateWithDuration(0.5) { () -> Void in
-//		//        stackView.axis = .Vertical
-//		screen.view.frame = CGRectMake(0, 0, 480, 320)
-//	}
-//})
-
 //: [Next](@next)
 
