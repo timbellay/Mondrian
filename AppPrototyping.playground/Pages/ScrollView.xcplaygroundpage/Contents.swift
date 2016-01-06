@@ -31,49 +31,26 @@ class ListController: UIViewController, UITableViewDelegate, UITableViewDataSour
 	}
 }
 
-class ScrollController: NSObject, UIScrollViewDelegate {
-//	var scrollView: UIScrollView!
-	var scrollView = UIView(frame: .zero)
-	init(frame: CGRect) {
-		
-//		scrollView = UIScrollView(frame: frame)
-//		scrollView.contentSize = frame.size
-//		super.init()
-//		scrollView.delegate = self
-		
-		scrollView.frame = frame
-		scrollView.backgroundColor = .purpleColor()
-		scrollView.translatesAutoresizingMaskIntoConstraints = false
-		
-	}
-	func scrollViewDidScroll(scrollView: UIScrollView) {
-		print("Scrolling")
-	}
-}
 
 let device = Device.iPhone6
 let frame = device.frame()
 let view = UIView(frame: frame)
 let sv = makeVerticalSV(view)
-let statusBar = StatusBar(frame: frame, theme: .dark)
+let statusBar = StatusBar(frame: frame, theme: .light)
 sv.addArrangedSubview(statusBar.view)
 horizontalStrechToParentView(statusBar.view)
 
-let navbar = NavigationBar(frame: frame, theme: .dark, title: "Hello")
-sv.addArrangedSubview(navbar.view)
-//horizontalStrechToParentView(navbar.view)
-navbar.view
+let svc = ScrollView(device: device, imageName: "splash", scrollDirection: .Both, width: nil, height: 500)
+sv.addArrangedSubview(svc.view)
+svc.center()
+//svc.scroll(.Left, amount: 100)
 
-
-let svc = ScrollController(frame: CGRectMake(0, 0, frame.width, 200))
-sv.addArrangedSubview(svc.scrollView)
-svc.scrollView
-horizontalStrechToParentView(svc.scrollView)
-
+let tabbar = TabBar(frame: frame, theme: .light)
+sv.addArrangedSubview(tabbar.view)
 
 XCPlaygroundPage.currentPage.liveView = view
 XCPlaygroundPage.currentPage.needsIndefiniteExecution = true
-view.frame = frame
+view.frame = device.frame()
 
 //outlineViews([view], outlineColor: .whiteColor())
 //: [Next](@next)
