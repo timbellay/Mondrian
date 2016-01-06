@@ -1,7 +1,7 @@
 # app-prototyping-swift-playground
 
 - Prototype iOS screens in Swift 2.x playgrounds using minimal code.
-- Codebase is in a very preliminary state and subject to major architectural changes. 
+- Codebase is subject to major architectural changes as Swift is still pretty new.
 - PRs and suggestions are welcome!
 
 # usage:
@@ -16,51 +16,64 @@ XCPlayground.XCPlaygroundPage.currentPage.liveView = statusBar.view
 ```
 #Soon come:
 
-##[Screens]
-- login
-- settings
-- scrollView, with fade to indicate more content, scroll to line xx
-- show/hide keyboard
-- forms, e.g. login, join 
-- posts, e.g. status update, message, or photo
-- list or feed screen, e.g. tableViewController
-- collection sceen, e.g. collectionView
-- detail, single cell list, tableViewController
-- settings, tableViewController
-- page, pageViewController, e.g. on-boarding
+##[Bars]
+- [x] StatusBar
+	- [x] Cellular signal strength meter
+	- [x] Carrier labels
+		- [ ] more carrier labels, e.g. Sprint, AT&T, etc.
+	- [ ] WiFi signal strength meter
+	- [x] Time
+	- [ ] Phone is using location services and alarm icon, etc.
+- [x] NavigationBar
+	- [ ] Ability to add SearchBar to NavigationBar
+- [x] ToolBar
+	- [ ] default toolbar that take three buttons
+	- [ ] ToolBar divider/separator (left, up, right, down)
+- [x] TabBar
+- [x] SearchBar
+- [ ] use UIBarSyle enum for bars?
+
+##[Screens you should be able to make in v1.0]
+- [ ] Form, e.g. login, join 
+- [ ] Login, see Form below
+- [ ] Post, e.g. status update, message, or photo
+- [x] ScrollView 
+	- [x] scroll bars
+	- [ ] fadeView to indicate more content in a scrollable dirextion such as a textView in a scrollView
+- [ ] Feed, i.e. List or UITableViewController
+- [ ] Settings, type of Feed above
+- [ ] Collection, i.e collectionView
+- [ ] Detail, i.e a single cell in Feed
+- [ ] Page, i.e. pageViewController, e.g. on-boarding
+
+##[Controls you should be able to add anywhere in v1.0]
+- [ ] Button, label (left, up, right, down)
+- [ ] Sliders
+- [ ] Steppers
+- [ ] Switches
+- [ ] Text Fields
+	- [ ] ability to show/hide keyboard
+- [ ] Segmented Controls
+- [ ] Date Pickers
+- [ ] Page Controls
+- [ ] ActionSheet
+- [ ] Popover, i.e “new updates” for Feed
+- [ ] AlertView, including System Notifications used in app permission granting. 
+- [ ] Activity indicators 
+	- [ ] with animations
 
 ##[UIView extension]
-- ability to add other views to the left, top, right, or bottom of view.
-
-##[Controls]
-- add button maker (UIStackView), label (left, up, right, down)
-- actionSheets
-- popovers, “new updates” and others
-- alertView including System Notifications used in app permission granting. 
-- activity indicators with animations
-- Date Pickers
-- Page Controls
-- Segmented Controls
-- Text Fields
-- Sliders
-- Steppers
-- Switches
+- [ ] Ability to add other views to the left, top, right, or bottom of view.
 
 ##[Resources]
-- add open source icons as placeholders for default icons
-
-##[Bars]
-- add search to navigation bar
-- default toolbar that take three buttons
-- toolbar divider/ separator (left, up, right, down)
-- use UIBarSyle enum for bars?
+- [ ] Open source icons and other default icons to speed up prototyping
 
 ##[Cells]
-- tableviewcell simple & custom
-    - style: Facebook & other app styles
-- collection view cells, simple & custom
+- [ ] TableViewCell templates (4-5 options to start with)
+    - [ ] style: Facebook 
+- [ ] CollectionViewCell templates
 
-##[Data]
-- data manager singleton with:
-    - dateformatter, other expensive formatters go here
-    - gets/creates pseudo data to fill tables, etc.
+##[Data & Backend]
+- [ ] Data manager singleton with:
+    - [ ] DateFormatter
+    - [ ] Get pseudo data to fill tables and other Screens
