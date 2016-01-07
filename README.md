@@ -1,10 +1,10 @@
-# app-prototyping-swift-playground
+# Mondrian - Swift App prototyping in Xcode Playgrounds!
 
-- Prototype iOS screens in Swift 2.x playgrounds using minimal code.
+- Quick and flexibly prototype iOS screens using Swift 2.x and Xcode Playgrounds with minimal code.
 - Codebase is subject to major architectural changes as Swift is still pretty new.
 - PRs and suggestions are welcome!
 
-# usage:
+# Usage:
 
 ```
 import UIKit
