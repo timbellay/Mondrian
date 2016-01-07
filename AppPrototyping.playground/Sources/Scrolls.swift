@@ -193,29 +193,57 @@ public class ScrollView: NSObject, UIScrollViewDelegate {
 	}
 }
 
-public class ListController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+public class FeedView: UIViewController, UITableViewDelegate, UITableViewDataSource {
 	
-	var tableView: UITableView!
-	let items = ["Hello 1", "Hello 2", "Hello 3"]
+	public var tableView: UITableView!
+	var tableViewHeightAnchor: CGFloat?
+	var tableViewWidthAnchor: CGFloat?
+	var cells = [AnyObject]()
+	
+	public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+		super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+	}
+
+	required public init?(coder aDecoder: NSCoder) {
+	    fatalError("init(coder:) has not been implemented")
+	}
+	
+	public init(device: Device, height: CGFloat?, cells: [AnyObject]) {
+		self.cells = cells
+		tableView = UITableView()
+		tableView.translatesAutoresizingMaskIntoConstraints = false
+		super.init(nibName: nil, bundle: nil)
+		tableView.dataSource = self
+		tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+
+		if let heightAnchor = height {
+			view.heightAnchor.constraintEqualToConstant(heightAnchor).active = true
+			self.tableViewHeightAnchor = heightAnchor
+		} else {
+			tableView.heightAnchor.constraintEqualToConstant(200).active = true
+			self.tableViewHeightAnchor = 200
+			print("WARNING: set tableView height to minimum height: 200")
+		}
+		
+		view.widthAnchor.constraintEqualToConstant(device.frame().width).active = true
+		tableViewWidthAnchor = device.frame().width
+		
+		view.addSubview(tableView)
+		view.translatesAutoresizingMaskIntoConstraints = false
+	}
 	
 	public override func viewDidLoad() {
 		super.viewDidLoad()
-		view.frame = Device.iPhone5.frame()
-		tableView = UITableView(frame: self.view.frame)
-		tableView.dataSource = self
-		tableView.translatesAutoresizingMaskIntoConstraints = false
-		tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
-		self.view.addSubview(self.tableView)
+		tableView.frame = view.frame
 	}
 	
 	public func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
-		return self.items.count;
+		return self.cells.count;
 	}
 	
 	public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
-		let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as UITableViewCell
-		cell.textLabel?.text = "\(self.items[indexPath.row])"
-		cell.backgroundColor = .purpleColor()
+		var cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as UITableViewCell
+		cell = cells[indexPath.row] as! UITableViewCell
 		return cell
 	}
 }
