@@ -89,17 +89,13 @@ public class View: UIView {
 			case .Up, .Down:
 				superStackview?.axis = .Vertical
 			}
-			print("Stackview was just created.")
 			superStackview?.addArrangedSubview(self)
-			print("Self was added to stackview.")
 		}
 	}
 	
 	func setupSubStackView() {
 		if subStackview == nil {
 			subStackview = makeSV(self, axis: .Vertical)
-			print("Stackview was just created.")
-			print("A sub stackview was added to Self.")
 		}
 	}
 	
@@ -136,7 +132,7 @@ public class View: UIView {
 				superStackview?.insertArrangedSubview(subview, atIndex: ind + 1)  // Except that expected arg type is UInt.
 			}
 		} else {
-			print("Warning View.self was not found in horizontal stackview.")
+			print("Warning View.self was not found in stackview.")
 		}
 	}
 	
@@ -145,7 +141,6 @@ public class View: UIView {
 		if subStackview == nil {
 			setupSubStackView()
 			subStackview?.addArrangedSubview(subview)
-			print("A view was added to a sub stackview.")
 		}
 	}
 	

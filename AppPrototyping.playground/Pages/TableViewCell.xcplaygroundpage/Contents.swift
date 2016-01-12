@@ -3,51 +3,97 @@
 import UIKit
 import XCPlayground
 
+public enum CellType {
+	case Simple
+}
 
-//let device = Device.iPhone6
-//let frame = device.frame()
-//let statusbar = StatusBar(frame: device.frame(), theme: .dark)
-//
-//let cell1 = UITableViewCell()
-//cell1.textLabel?.text = "cell1"
-//let cell2 = UITableViewCell()
-//cell2.textLabel?.text = "cell2"
-//var cells = [cell1, cell2]
-//
-//var feedView = FeedView(device: device, height: 500, cells: cells)
-//feedView.viewDidLoad()
-//
-//var view = UIView(frame: device.frame())
-//XCPlaygroundPage.currentPage.liveView = view
-//XCPlaygroundPage.currentPage.needsIndefiniteExecution = true
-//
-//var sv = makeVerticalSV(view)
-//sv.addArrangedSubview(statusbar.view)
-//horizontalStrechToParentView(statusbar.view)
-//sv.addArrangedSubview(feedView.view!)
+public class Cell {
+	public var view: View?
+	public var members: [String : AnyObject]?
+	public var memberData: [String : [AnyObject]]?
+	public func addMember(keyName: String, value: AnyObject) {
+		members?[keyName] = value
+	}
 
+	public init(device: Device, cellType: CellType) {
+		switch cellType {
+		case .Simple:
+			let labelView = View(width: 200, height: 44, color: .clearColor())
+			let leftView = View(width: 44, height: 44, color: .darkGrayColor())
+			let rightView = View(width: 44, height: 44, color: .darkGrayColor())
+			labelView.stick(leftView, direction: .Left)
+			labelView.stick(rightView, direction: .Right)
+			members = ["leftView" : leftView, "rightView" : rightView, "labelView" : labelView]
+			
+			let label = UILabel(text: "LABEL", font: Font.titleText.create(), textColor: .darkGrayColor(), labelColor: .clearColor())
+			label.textAlignment = .Left
+			labelView.stickViewInside(label)
+			
+			view = View(width: device.frame().width, height: 44, color: .lightGrayColor())
+			view?.stickViewInside(labelView.superStackview!)
+		}
+	}
+	
+	public init(view: View, members: [String : AnyObject]?) {
+		self.view = view
+		self.members = members
+	}
+}
 
-let view = View(width: 200, height: 44, color: .clearColor())
-let leftView = View(width: 44, height: 44, color: .darkGrayColor())
-let rightView = View(width: 44, height: 44, color: .darkGrayColor())
+public class TableView: ScrollView {
+	var subStackView: UIStackView?
+	var tableViewHeightAnchor: CGFloat?
+	var tableViewWidthAnchor: CGFloat?
+	public var cells: [Cell]?
 
-view.stick(leftView, direction: .Left)
-view.stick(rightView, direction: .Right)
+	public init(device: Device, width: CGFloat?, height: CGFloat?, cells: [Cell]?) {
+		super.init(device: device, imageName: nil, scrollDirection: .Vertical, width: width, height: height)
+		self.cells = cells
+		view.backgroundColor = .purpleColor()
+		//setup stackview
+		let sv = makeVerticalSV(view)
+		subStackView = sv
+		setTheTable()
+	}
+	
+	func setTheTable() {
+		if let cellArray = cells {
+			cellArray.forEach({
+				if let v = $0.view {
+				subStackView?.addArrangedSubview(v)
+				print("Adding cell view \(v) to stackview")
+				}
+			})
+		}
+	
+	}
+	
+	public func addCell(cell: Cell) {
+		cells?.append(cell)
+	}
+}
 
-let label = UILabel(text: "LABEL", font: Font.titleText.create(), textColor: .darkGrayColor(), labelColor: .clearColor())
-label.textAlignment = .Left
-view.stickViewInside(label)
+let device = Device.iPhone5s
+let frame = device.frame()
+let statusbar = StatusBar(frame: device.frame(), theme: .dark)
 
-let containerView = View(width: 320, height: 50, color: .lightGrayColor())
-let containerViewSV = makeVerticalSV(containerView)
-containerViewSV.addArrangedSubview(view.superStackview!)
-//containerView.stickViewInside(view.superStackview as! UIView)
+let cell1 = Cell(device: device, cellType: .Simple)
+let cell2 = Cell(device: device, cellType: .Simple)
 
+var tableView = TableView(device: device, width: nil, height: 300, cells: [cell1, cell2])
+
+var containerView = UIView(frame: device.frame())
+var sv = makeVerticalSV(containerView)
+sv.addArrangedSubview(statusbar.view)
+horizontalStrechToParentView(statusbar.view)
+sv.addArrangedSubview(tableView.view)
+tableView.view
 
 XCPlaygroundPage.currentPage.liveView = containerView
 XCPlaygroundPage.currentPage.needsIndefiniteExecution = true
 
 
-//outlineViews([containerView], outlineColor: .whiteColor())
+outlineViews([containerView], outlineColor: .whiteColor())
+
 
 //: [Next](@next)
