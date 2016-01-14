@@ -35,113 +35,154 @@ public func makeSV(view: UIView, axis: UILayoutConstraintAxis) -> UIStackView {
 	return stackView
 }
 
+public enum Margin {
+	case Left, Right, Top, Bottom
+}
 
-public class View: UIView {
-	public var superStackview: UIStackView?
-	public var subStackview: UIStackView?
+public enum Align {
+	case Left, Right, Top, Bottom, CenterX, CenterY
+}
+
+public class ContainerView {
+	public var view: UIView?
 	var viewWidthAnchor: CGFloat?
 	var viewHeightAnchor: CGFloat?
 	
-	public init(width: CGFloat?, height: CGFloat?, color: UIColor?) {
-		super.init(frame: .zero)
+	public var superStackview: UIStackView?
+	public var subStackview: UIStackView?
+
+	var subviews: [UIView]?
+	let marginLayout = UILayoutGuide()
+	let marginInset: CGFloat = 8
+	
+	public init(width: CGFloat, height: CGFloat, color: UIColor?, marginInset: CGFloat) {
+		
 		if color != nil {
-			backgroundColor = color!
+			view = UIView(width: width, height: height, color: color)
 		} else {
-			backgroundColor = .clearColor()
+			view = UIView(width: width, height: height, color: nil)
 		}
-		translatesAutoresizingMaskIntoConstraints = false
+		viewWidthAnchor = width
+		viewHeightAnchor = height
 		
-		// Setup view anchors.
-		if let wAnchor = width {
-			widthAnchor.constraintEqualToConstant(wAnchor).active = true
-			viewWidthAnchor = wAnchor
-		} else {
-			widthAnchor.constraintEqualToConstant(44).active = true
-			viewWidthAnchor = 44
-		}
-		if let hAnchor = height {
-			heightAnchor.constraintEqualToConstant(hAnchor).active = true
-			viewHeightAnchor = hAnchor
-		} else {
-			heightAnchor.constraintEqualToConstant(44).active = true
-			viewHeightAnchor = 44
-		}
+
+		view?.addLayoutGuide(marginLayout)
+		view?.layoutMargins = UIEdgeInsets(top: marginInset, left: marginInset,
+			bottom: marginInset, right: marginInset)
+		// Set marginLayout guide to match view's margins.
+		var constraints = [NSLayoutConstraint]()
+		constraints.append(marginLayout.centerXAnchor.constraintEqualToAnchor(view?.centerXAnchor))
+		constraints.append(marginLayout.centerYAnchor.constraintEqualToAnchor(view?.centerYAnchor))
+		constraints.append(marginLayout.widthAnchor.constraintEqualToAnchor(view?.widthAnchor, constant: -2 * marginInset))
+		constraints.append(marginLayout.heightAnchor.constraintEqualToAnchor(view?.heightAnchor, constant: -2 * marginInset))
+		NSLayoutConstraint.activateConstraints(constraints)
 	}
-	
-	public override init(frame: CGRect) {
-		super.init(frame: frame)
-	}
-	
-	required public init?(coder aDecoder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
-	
-	func setupSuperStackView(direction: Direction) {
-		if superStackview == nil {
-			superStackview = UIStackView(frame: .zero)
-			superStackview?.translatesAutoresizingMaskIntoConstraints = false
-			superStackview?.alignment = .Center
-			superStackview?.distribution = .EqualCentering
-			superStackview?.layoutMarginsRelativeArrangement = true
-			switch direction {
-			case .Left, .Right:
-				superStackview?.axis = .Horizontal
-			case .Up, .Down:
-				superStackview?.axis = .Vertical
-			}
-			superStackview?.addArrangedSubview(self)
-		}
-	}
-	
-	func setupSubStackView() {
-		if subStackview == nil {
-			subStackview = makeSV(self, axis: .Vertical)
-		}
-	}
-	
-	func findViewInStackView(view: UIView, stackview: UIStackView?) -> Int? {
-		var ind: Int? = nil
-		if let subviews = stackview?.arrangedSubviews {
-			for (i, arrangedView) in subviews.enumerate() {
-				if arrangedView == view {
-					ind = i
-				}
-			}
-		}
-		return ind
 		
-	}
-	
-	func removeFromStackView(subview: UIView) {
-		unstick(subview, stackview: superStackview)
-		unstick(subview, stackview: subStackview)
-	}
-	
-	func unstick(subview: UIView, stackview: UIStackView?) {
-		stackview?.removeArrangedSubview(subview)
-	}
-	
-	public func stick(subview: UIView, direction: Direction) {
-		removeFromStackView(subview)
-		setupSuperStackView(direction)
-		if let ind = findViewInStackView(self, stackview: superStackview) {
-			switch direction {
-			case .Left, .Up:
-				superStackview?.insertArrangedSubview(subview, atIndex: ind) // Except that expected arg type is UInt.
-			case .Right, .Down:
-				superStackview?.insertArrangedSubview(subview, atIndex: ind + 1)  // Except that expected arg type is UInt.
-			}
-		} else {
-			print("Warning View.self was not found in stackview.")
+	public func stickSubviewToInsideMargin(margin: Margin, subview: UIView, byAmount: CGFloat) {
+		view?.addSubview(subview)
+		switch margin {
+		case .Left:
+			NSLayoutConstraint(item: subview, attribute: .Left, relatedBy: .Equal, toItem: marginLayout, attribute: .Left, multiplier: 1, constant: byAmount).active = true
+		case .Right:
+			NSLayoutConstraint(item: subview, attribute: .Right, relatedBy: .Equal, toItem: marginLayout, attribute: .Right, multiplier: 1, constant: byAmount).active = true
+		case .Top:
+			NSLayoutConstraint(item: subview, attribute: .Top, relatedBy: .Equal, toItem: marginLayout, attribute: .Top, multiplier: 1, constant: byAmount).active = true
+		case .Bottom:
+			NSLayoutConstraint(item: subview, attribute: .Bottom, relatedBy: .Equal, toItem: marginLayout, attribute: .Bottom, multiplier: 1, constant: byAmount).active = true
+		break
 		}
 	}
 	
-	public func stickViewInside(subview: UIView) {
-		removeFromStackView(subview)
-		if subStackview == nil {
-			setupSubStackView()
-			subStackview?.addArrangedSubview(subview)
+	public func stickSubviewToSubview(subview1: UIView, direction: Direction, subview2: UIView, byAmount: CGFloat, align: Align) {
+		view?.addSubview(subview1)
+		switch direction {
+		case .Up:
+			NSLayoutConstraint(item: subview1, attribute: .Bottom, relatedBy: .Equal, toItem: subview2, attribute: .Top, multiplier: 1, constant: byAmount).active = true
+		case .Down:
+			NSLayoutConstraint(item: subview1, attribute: .Top, relatedBy: .Equal, toItem: subview2, attribute: .Bottom, multiplier: 1, constant: byAmount).active = true
+		case .Left:
+			NSLayoutConstraint(item: subview1, attribute: .Right, relatedBy: .Equal, toItem: subview2, attribute: .Left, multiplier: 1, constant: byAmount).active = true
+		case .Right:
+			NSLayoutConstraint(item: subview1, attribute: .Left, relatedBy: .Equal, toItem: subview2, attribute: .Right, multiplier: 1, constant: byAmount).active = true
+		}
+		
+		switch align {
+		case .CenterX:
+			NSLayoutConstraint(item: subview1, attribute: .CenterX, relatedBy: .Equal, toItem: subview2, attribute: .CenterX, multiplier: 1, constant: 0).active = true
+		case .CenterY:
+			NSLayoutConstraint(item: subview1, attribute: .CenterY, relatedBy: .Equal, toItem: subview2, attribute: .CenterY, multiplier: 1, constant: 0).active = true
+		case .Left:
+			NSLayoutConstraint(item: subview1, attribute: .Left, relatedBy: .Equal, toItem: subview2, attribute: .Left, multiplier: 1, constant: 0).active = true
+		case .Right:
+			NSLayoutConstraint(item: subview1, attribute: .Right, relatedBy: .Equal, toItem: subview2, attribute: .Right, multiplier: 1, constant: 0).active = true
+		case .Top:
+			NSLayoutConstraint(item: subview1, attribute: .Top, relatedBy: .Equal, toItem: subview2, attribute: .Top, multiplier: 1, constant: 0).active = true
+		case .Bottom:
+			NSLayoutConstraint(item: subview1, attribute: .Bottom, relatedBy: .Equal, toItem: subview2, attribute: .Bottom, multiplier: 1, constant: 0).active = true
 		}
 	}
+	
+	// TODO: Rethink and refactor stackview code below. TB.
+	
+//	func setupSuperStackView(direction: Direction) {
+//		if superStackview == nil {
+//			superStackview = UIStackView(frame: .zero)
+//			superStackview?.translatesAutoresizingMaskIntoConstraints = false
+//			superStackview?.alignment = .Center
+//			superStackview?.distribution = .EqualCentering
+//			superStackview?.layoutMarginsRelativeArrangement = true
+//			switch direction {
+//			case .Left, .Right:
+//				superStackview?.axis = .Horizontal
+//			case .Up, .Down:
+//				superStackview?.axis = .Vertical
+//			}
+//			superStackview?.addArrangedSubview(view!)
+//		}
+//	}
+//	
+//	func setupSubStackView() {
+//		if subStackview == nil {
+//			subStackview = makeSV(view!, axis: .Vertical)
+//		}
+//	}
+//	
+//	func findViewInStackView(view: UIView, stackview: UIStackView?) -> Int? {
+//		var ind: Int? = nil
+//		if let subviews = stackview?.arrangedSubviews {
+//			for (i, arrangedView) in subviews.enumerate() {
+//				if arrangedView == view {
+//					ind = i
+//				}
+//			}
+//		}
+//		return ind
+//	}
+//	
+//	func removeFromStackView(subview: UIView) {
+//		unstick(subview, stackview: superStackview)
+//		unstick(subview, stackview: subStackview)
+//	}
+//	
+//	func unstick(subview: UIView, stackview: UIStackView?) {
+//		stackview?.removeArrangedSubview(subview)
+//	}
+//	
+//	public func stack(subview: UIView, direction: Direction) {
+//		removeFromStackView(subview)
+//		setupSuperStackView(direction)
+//		if let ind = findViewInStackView(view!, stackview: superStackview) {
+//			switch direction {
+//			case .Left, .Up:
+//				superStackview?.insertArrangedSubview(subview, atIndex: ind) // Except that expected arg type is UInt.
+//			case .Right, .Down:
+//				superStackview?.insertArrangedSubview(subview, atIndex: ind + 1)  // Except that expected arg type is UInt.
+//			}
+//		} else {
+//			print("Warning View.self was not found in stackview.")
+//		}
+//	}
+
 	
 }
+

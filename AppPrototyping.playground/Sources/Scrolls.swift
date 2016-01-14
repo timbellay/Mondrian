@@ -10,7 +10,6 @@
 import UIKit
 
 public enum Direction {
-	// NB: Scroll .Up means that the content moves up and that the user has swipped up.
 	case Up, Down, Left, Right
 }
 

@@ -23,7 +23,7 @@ public class TableView: ScrollView {
 	func setTheTable() {
 		if let cellArray = cells {
 			cellArray.forEach({
-				if let v = $0.view {
+				if let v = $0.containerView?.view! {
 				subStackView?.addArrangedSubview(v)
 				print("Adding cell view \(v) to stackview")
 				}
