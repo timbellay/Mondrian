@@ -11,12 +11,29 @@ import UIKit
 import XCPlayground
 
 let device = Device.iPhone6
-var statusBar = StatusBar(frame: device.frame(), theme: .light)
-XCPlayground.XCPlaygroundPage.currentPage.liveView = statusBar.view
+let screen = Screen(device: device, type: .list, theme: .dark)
+XCPlayground.XCPlaygroundPage.currentPage.liveView = screen.view
 ```
+
 #Soon come:
 
-##[Bars]
+##[Screens you should be able to make in v1.0]
+- [ ] Form, e.g. login, join 
+- [ ] Login, see Form below
+- [ ] Post, e.g. status update, message, or photo
+- [x] ScrollView 
+	- [x] scroll bars
+	- [ ] fadeView to indicate more content in a scrollable dirextion such as a textView in a scrollView
+- [X] Feed, i.e. List or UITableViewController
+	- [x] simple tableViewCell
+	- [ ] section cells or headers
+	- [ ] other types, plus turtorial on custom tableViewCell using ContainerView class.
+- [ ] Settings, type of Feed above
+- [ ] Collection, i.e collectionView
+- [ ] Detail, i.e a single cell in Feed
+- [ ] Page, i.e. pageViewController, e.g. on-boarding
+
+##[Bars you should be able to add to any screen in v1.0]
 - [x] StatusBar
 	- [x] Cellular signal strength meter
 	- [x] Carrier labels
@@ -31,20 +48,7 @@ XCPlayground.XCPlaygroundPage.currentPage.liveView = statusBar.view
 	- [ ] ToolBar divider/separator (left, up, right, down)
 - [x] TabBar
 - [x] SearchBar
-- [ ] use UIBarSyle enum for bars?
-
-##[Screens you should be able to make in v1.0]
-- [ ] Form, e.g. login, join 
-- [ ] Login, see Form below
-- [ ] Post, e.g. status update, message, or photo
-- [x] ScrollView 
-	- [x] scroll bars
-	- [ ] fadeView to indicate more content in a scrollable dirextion such as a textView in a scrollView
-- [ ] Feed, i.e. List or UITableViewController
-- [ ] Settings, type of Feed above
-- [ ] Collection, i.e collectionView
-- [ ] Detail, i.e a single cell in Feed
-- [ ] Page, i.e. pageViewController, e.g. on-boarding
+- [ ] use UIBarSyle enum for bars? also a gentle reminder to use UIKit enums when possible
 
 ##[Controls you should be able to add anywhere in v1.0]
 - [ ] Button, label (left, up, right, down)
@@ -62,16 +66,8 @@ XCPlayground.XCPlaygroundPage.currentPage.liveView = statusBar.view
 - [ ] Activity indicators 
 	- [ ] with animations
 
-##[UIView extension]
-- [ ] Ability to add other views to the left, top, right, or bottom of view.
-
 ##[Resources]
 - [ ] Open source icons and other default icons to speed up prototyping
-
-##[Cells]
-- [ ] TableViewCell templates (4-5 options to start with)
-    - [ ] style: Facebook 
-- [ ] CollectionViewCell templates
 
 ##[Data & Backend]
 - [ ] Data manager singleton with:
