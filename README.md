@@ -14,9 +14,9 @@ let device = Device.iPhone6
 let screen = Screen(device: device, type: .list, theme: .dark)
 XCPlayground.XCPlaygroundPage.currentPage.liveView = screen.view
 ```
-g
-#Soon come:
 ![ScreenShot](https://raw.github.com/timbellay/Mondrian/master/screens/list.png)
+
+#Soon come:
 
 ##[Screens you should be able to make in v1.0]
 - [ ] Form, e.g. login, join 
