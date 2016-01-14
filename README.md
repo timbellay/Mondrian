@@ -1,4 +1,4 @@
-# Mondrian - Swift App prototyping in Xcode Playgrounds!
+# Mondrian - App prototyping in Xcode Playgrounds!
 
 - Quick and flexibly prototype iOS screens using Swift 2.x and Xcode Playgrounds with minimal code.
 - Codebase is subject to major architectural changes as Swift is still pretty new.
@@ -18,7 +18,7 @@ XCPlayground.XCPlaygroundPage.currentPage.liveView = screen.view
 
 #Soon come:
 
-##[Screens you should be able to make in v1.0]
+##[Screens]
 - [ ] Form, e.g. login, join 
 - [ ] Login, see Form below
 - [ ] Post, e.g. status update, message, or photo
@@ -34,7 +34,7 @@ XCPlayground.XCPlaygroundPage.currentPage.liveView = screen.view
 - [ ] Detail, i.e a single cell in Feed
 - [ ] Page, i.e. pageViewController, e.g. on-boarding
 
-##[Bars you should be able to add to any screen in v1.0]
+##[Bars you should be able to add to any screen]
 - [x] StatusBar
 	- [x] Cellular signal strength meter
 	- [x] Carrier labels
@@ -51,7 +51,7 @@ XCPlayground.XCPlaygroundPage.currentPage.liveView = screen.view
 - [x] SearchBar
 - [ ] use UIBarSyle enum for bars? also a gentle reminder to use UIKit enums when possible
 
-##[Controls you should be able to add anywhere in v1.0]
+##[Controls you should be able to add anywhere]
 - [ ] Button, label (left, up, right, down)
 - [ ] Sliders
 - [ ] Steppers
