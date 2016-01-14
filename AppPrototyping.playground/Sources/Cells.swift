@@ -5,7 +5,7 @@ public enum CellType {
 }
 
 public class Cell {
-	public var view: View?
+	public var containerView: ContainerView?
 	public var members: [String : AnyObject]?
 	public var memberData: [String : [AnyObject]]?
 	public func addMember(keyName: String, value: AnyObject) {
@@ -13,24 +13,35 @@ public class Cell {
 	}
 	
 	public init(device: Device, cellType: CellType) {
+		let deviceFrame = device.frame()
+		containerView = ContainerView(width: deviceFrame.width, height: 54, color: .whiteColor(), marginInset: 5)
+
 		switch cellType {
 		case .Simple:
-			let imageView = View(width: 44, height: 44, color: .whiteColor())
-			let labelView = View(width: 200, height: 44, color: .whiteColor())
-			imageView.stick(labelView, direction: .Right)
+			let imageView = UIView(width: 44, height: 44, color: .whiteColor())
+			let labelView = ContainerView(width: 150, height: 44, color: .whiteColor(), marginInset: 0)
+			let accessoryView = UIView(width: 44, height: 44, color: .whiteColor())
 			let label = UILabel(text: "cell label", font: Font.titleText.create(), textColor: .blackColor(), labelColor: .whiteColor())
-			labelView.stickViewInside(label)
-			let accessoryView = View(width: 44, height: 44, color: .whiteColor())
-			view = View(width: device.frame().width, height: 44, color: .whiteColor())
-			let containerSV = makeHorizontalSV(view!)
-			containerSV.addArrangedSubview(imageView.superStackview!)
-			containerSV.addArrangedSubview(accessoryView)
+			labelView.stickSubviewToInsideMargin(.Left, subview: label, byAmount: 0)
+			
+			// Stick imageView.
+			containerView?.stickSubviewToInsideMargin(.Left, subview: imageView, byAmount: 0)
+			containerView?.stickSubviewToInsideMargin(.Top, subview: imageView, byAmount: 0)
+			
+			// Stick accessoryView.
+			containerView?.stickSubviewToInsideMargin(.Right, subview: accessoryView, byAmount: 0)
+			containerView?.stickSubviewToInsideMargin(.Top, subview: accessoryView, byAmount: 0)
+			
+			// Stick labelView to imageView.
+			containerView?.stickSubviewToSubview(labelView.view!, direction: .Right, subview2: imageView, byAmount: 8, align: .CenterY)
+			
+			
 			members = ["label" : labelView, "image" : imageView, "accessory" : accessoryView]
 		}
 	}
 	
-	public init(view: View, members: [String : AnyObject]?) {
-		self.view = view
+	public init(containerView: ContainerView, members: [String : AnyObject]?) {
+		self.containerView = containerView
 		self.members = members
 	}
 }

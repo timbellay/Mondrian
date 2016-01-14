@@ -24,22 +24,30 @@ public extension UILabel {
 }
 
 public extension UIView {
-// TODO: extend to include outlineViews method from below. TB.
-
-//	func centerInSuperview() {
-//		self.centerHorizontallyInSuperview()
-//		self.centerVerticallyInSuperview()
-//	}
-//	
-//	func centerHorizontallyInSuperview(){
-//		let c: NSLayoutConstraint = NSLayoutConstraint(item: self, attribute: .CenterX, relatedBy: .Equal, toItem: self.superview, attribute: .CenterX, multiplier: 1, constant: 0)
-//		self.superview?.addConstraint(c)
-//	}
-//	
-//	func centerVerticallyInSuperview(){
-//		let c: NSLayoutConstraint = NSLayoutConstraint(item: self, attribute: .CenterY, relatedBy: .Equal, toItem: self.superview, attribute: .CenterY, multiplier: 1, constant: 0)
-//		self.superview?.addConstraint(c)
-//	}
+	
+	public convenience init(width: CGFloat?, height: CGFloat?, color: UIColor?) {
+		self.init()
+		if color != nil {
+			self.backgroundColor = color!
+		} else {
+			self.backgroundColor = .clearColor()
+		}
+		self.translatesAutoresizingMaskIntoConstraints = false
+		
+		// Setup view anchors.
+		if let wAnchor = width {
+			self.widthAnchor.constraintEqualToConstant(wAnchor).active = true
+		} else {
+			self.widthAnchor.constraintEqualToConstant(44).active = true
+			
+		}
+		if let hAnchor = height {
+			self.heightAnchor.constraintEqualToConstant(hAnchor).active = true
+			
+		} else {
+			self.heightAnchor.constraintEqualToConstant(44).active = true
+		}
+	}
 	
 }
 
