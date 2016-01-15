@@ -65,6 +65,7 @@ public class ContainerView {
 		viewWidthAnchor = width
 		viewHeightAnchor = height
 		
+		view?.translatesAutoresizingMaskIntoConstraints = false
 
 		view?.addLayoutGuide(marginLayout)
 		view?.layoutMargins = UIEdgeInsets(top: marginInset, left: marginInset,
@@ -91,6 +92,21 @@ public class ContainerView {
 			NSLayoutConstraint(item: subview, attribute: .Bottom, relatedBy: .Equal, toItem: marginLayout, attribute: .Bottom, multiplier: 1, constant: byAmount).active = true
 		break
 		}
+	}
+
+	public func centerSubviewXInside(subview: UIView) {
+		NSLayoutConstraint(item: subview, attribute: .CenterX, relatedBy: .Equal, toItem: view!, attribute: .CenterX, multiplier: 1, constant: 0).active = true
+	}
+	
+	public func centerSubviewYInside(subview: UIView) {
+		NSLayoutConstraint(item: subview, attribute: .CenterY, relatedBy: .Equal, toItem: view!, attribute: .CenterY, multiplier: 1, constant: 0).active = true
+	}
+
+	
+	public func centerSubviewInside(subview: UIView) {
+		view?.addSubview(subview)
+		centerSubviewXInside(subview)
+		centerSubviewYInside(subview)
 	}
 	
 	public func stickSubviewToSubview(subview1: UIView, direction: Direction, subview2: UIView, byAmount: CGFloat, align: Align) {

@@ -24,8 +24,7 @@ public extension UILabel {
 }
 
 public extension UIView {
-	
-	public convenience init(width: CGFloat?, height: CGFloat?, color: UIColor?) {
+	convenience init(width: CGFloat?, height: CGFloat?, color: UIColor?) {
 		self.init()
 		if color != nil {
 			self.backgroundColor = color!
@@ -48,7 +47,6 @@ public extension UIView {
 			self.heightAnchor.constraintEqualToConstant(44).active = true
 		}
 	}
-	
 }
 
 
@@ -194,41 +192,41 @@ public struct StatusBar {
 
 public struct NavigationBar {
 	// TODO: ability to add search bar to the navBar.
-	
-	public var view = UIView(frame: .zero)
-	var mainSV: UIStackView?
+	public var containerView: ContainerView?
+	var backCarrot = UIView(width: 22, height: 22, color: Color.blueLink.create())
+	var backLabel: UIView
 	var titleLabel = UILabel()
-	public var leftNavItem: UIView
-	public var rightNavItem: UIView
-	public var title: String? {
-		didSet {
-			titleLabel.text = title
-		}
-	}
+	var rightNavItem: UIView
 	
 	public init(frame: CGRect, theme: Theme, title: String) {
-		view.frame = CGRectMake(0, 0, frame.size.width, 44)
-		self.title = title
-		mainSV = makeHorizontalSV(view)
-		view.addSubview(mainSV!)
-		let gray = Color.grayBackground.create()
+		containerView = ContainerView(width: frame.width, height: 44, color: .orangeColor(), marginInset: 8)
+		// Make bar elements.
 		if theme == .light {
-			titleLabel = UILabel(text: title, font: Font.titleText.create(), textColor: .blackColor(), labelColor: gray)
-			leftNavItem = UILabel(text: "<Back", font: Font.titleText.create(), textColor: .blackColor(), labelColor: gray)
-			rightNavItem = UILabel(text: "Forward>", font: Font.titleText.create(), textColor: .blackColor(), labelColor: gray)
-			view.backgroundColor = gray
+			backLabel = UILabel(text: "Back", font: Font.bodyText.create(), textColor: Color.blueLink.create(), labelColor: .whiteColor())
+			titleLabel = UILabel(text: title, font: Font.bodyText.create(), textColor: .blackColor(), labelColor: .whiteColor())
+			rightNavItem = UILabel(text: "Action", font: Font.bodyText.create(), textColor: Color.blueLink.create(), labelColor: .whiteColor())
+			containerView?.view?.backgroundColor = .whiteColor()
 		} else {
-			titleLabel = UILabel(text: title, font: Font.titleText.create(), textColor: .whiteColor(), labelColor: .clearColor())
-			leftNavItem = UILabel(text: "<Back", font: Font.titleText.create(), textColor: .whiteColor(), labelColor: .clearColor())
-			rightNavItem = UILabel(text: "Settings", font: Font.titleText.create(), textColor: .whiteColor(), labelColor: .clearColor())
-			view.backgroundColor = .clearColor()
+			backLabel = UILabel(text: "Back", font: Font.bodyText.create(), textColor: .whiteColor(), labelColor: .clearColor())
+			titleLabel = UILabel(text: title, font: Font.bodyText.create(), textColor: .whiteColor(), labelColor: .clearColor())
+			rightNavItem = UILabel(text: "Action", font: Font.bodyText.create(), textColor: .whiteColor(), labelColor: .clearColor())
+			containerView?.view?.backgroundColor = .clearColor()
 		}
+		// Turn off autoResizingMask...
+		backCarrot.translatesAutoresizingMaskIntoConstraints = false
+		backLabel.translatesAutoresizingMaskIntoConstraints = false
+		titleLabel.translatesAutoresizingMaskIntoConstraints = false
+		rightNavItem.translatesAutoresizingMaskIntoConstraints = false
 		
-//		leftNavItem.textAlignment = .Left
-//		rightNavItem.textAlignment = .Right
-		mainSV!.addArrangedSubview(titleLabel)
-		mainSV!.insertArrangedSubview(leftNavItem, atIndex: 0)
-		mainSV!.addArrangedSubview(rightNavItem)
+		// Add bar elements to containerView.
+		containerView?.stickSubviewToInsideMargin(.Left, subview: backCarrot, byAmount: 0)
+		containerView?.centerSubviewYInside(backCarrot)
+		containerView?.stickSubviewToSubview(backLabel, direction: .Right, subview2: backCarrot, byAmount: 4, align: .CenterY)
+		
+		containerView?.stickSubviewToInsideMargin(.Right, subview: rightNavItem, byAmount: 0)
+		containerView?.centerSubviewYInside(rightNavItem)
+		containerView?.centerSubviewInside(titleLabel)
+		
 	}
 }
 

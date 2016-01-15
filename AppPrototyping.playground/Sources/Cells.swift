@@ -14,29 +14,28 @@ public class Cell {
 	
 	public init(device: Device, cellType: CellType) {
 		let deviceFrame = device.frame()
-		containerView = ContainerView(width: deviceFrame.width, height: 54, color: .whiteColor(), marginInset: 5)
+		containerView = ContainerView(width: deviceFrame.width, height: 44, color: .whiteColor(), marginInset: 8)
 
 		switch cellType {
+		// TODO: Add other default types of cells in case statement here.
 		case .Simple:
-			let imageView = UIView(width: 44, height: 44, color: .whiteColor())
-			let labelView = ContainerView(width: 150, height: 44, color: .whiteColor(), marginInset: 0)
-			let accessoryView = UIView(width: 44, height: 44, color: .whiteColor())
-			let label = UILabel(text: "cell label", font: Font.titleText.create(), textColor: .blackColor(), labelColor: .whiteColor())
-			labelView.stickSubviewToInsideMargin(.Left, subview: label, byAmount: 0)
+			let imageView = UIView(width: 29, height: 29, color: .whiteColor())
+			let accessoryView = UIView(width: 29, height: 29, color: .whiteColor())
+			let label = UILabel(text: "cell label", font: Font.bodyText.create(), textColor: .blackColor(), labelColor: .whiteColor())
+			label.translatesAutoresizingMaskIntoConstraints = false
 			
-			// Stick imageView.
-			containerView?.stickSubviewToInsideMargin(.Left, subview: imageView, byAmount: 0)
+			// Stick imageView to left margin in containerView
+			containerView?.stickSubviewToInsideMargin(.Left, subview: imageView, byAmount: 8)
 			containerView?.stickSubviewToInsideMargin(.Top, subview: imageView, byAmount: 0)
 			
-			// Stick accessoryView.
-			containerView?.stickSubviewToInsideMargin(.Right, subview: accessoryView, byAmount: 0)
+			// Stick accessoryView to right margin in containerView
+			containerView?.stickSubviewToInsideMargin(.Right, subview: accessoryView, byAmount: -8)
 			containerView?.stickSubviewToInsideMargin(.Top, subview: accessoryView, byAmount: 0)
 			
-			// Stick labelView to imageView.
-			containerView?.stickSubviewToSubview(labelView.view!, direction: .Right, subview2: imageView, byAmount: 8, align: .CenterY)
-			
-			
-			members = ["label" : labelView, "image" : imageView, "accessory" : accessoryView]
+			// Stick label to right side of imageView.
+			containerView?.stickSubviewToSubview(label, direction: .Right, subview2: imageView, byAmount: 16, align: .CenterY)
+		
+			members = ["label" : label, "image" : imageView, "accessory" : accessoryView]
 		}
 	}
 	

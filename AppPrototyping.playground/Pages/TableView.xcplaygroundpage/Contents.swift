@@ -23,7 +23,7 @@ public class TableView: ScrollView {
 	func setTheTable() {
 		if let cellArray = cells {
 			cellArray.forEach({
-				if let v = $0.containerView?.view! {
+				if let v = $0.containerView?.view {
 				subStackView?.addArrangedSubview(v)
 				print("Adding cell view \(v) to stackview")
 				}
@@ -40,16 +40,21 @@ public class TableView: ScrollView {
 let device = Device.iPhone5s
 let frame = device.frame()
 let statusbar = StatusBar(frame: device.frame(), theme: .light)
+let navbar = NavigationBar(frame: frame, theme: .light, title: "Simple Table")
 
 let cell1 = Cell(device: device, cellType: .Simple)
 let cell2 = Cell(device: device, cellType: .Simple)
+cell1.containerView?.view?.frame
+cell1.containerView?.view?.frame = CGRectMake(0, 0, frame.width, 100)
+cell1.containerView?.view?.frame
 
-var tableView = TableView(device: device, width: nil, height: device.frame().height - 20, cells: [cell1, cell2])
+var tableView = TableView(device: device, width: nil, height: device.frame().height - 64, cells: [cell1, cell2])
 
 var containerView = UIView(frame: device.frame())
 var sv = makeVerticalSV(containerView)
 sv.addArrangedSubview(statusbar.view)
 horizontalStrechToParentView(statusbar.view)
+sv.addArrangedSubview(navbar.containerView!.view!)
 sv.addArrangedSubview(tableView.view)
 tableView.view
 
