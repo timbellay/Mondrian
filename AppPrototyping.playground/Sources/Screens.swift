@@ -155,7 +155,7 @@ public struct Screen {
 		let statusBar = StatusBar(frame: .zero, theme: theme)
 		views.append(statusBar.view)
 		let navBar = NavigationBar(frame: .zero, theme: theme, title: "Title")
-		views.append(navBar.view)
+		views.append(navBar.containerView!.view!)
 		let searchBar = SearchBar(frame: .zero, theme: theme)
 		views.append(searchBar.view)
 		let tableVC = TableViewController()
@@ -174,7 +174,7 @@ public struct Screen {
 		let tabBar = TabBar(frame: .zero, theme: theme)
 		views.append(tabBar.view)
 		
-		let viewDict = [ "statusBar" : statusBar.view, "navBar" : navBar.view, "searchBar" : searchBar.view, "toolBar" : toolBar.view, "tableView" : tableVC.view, "tabBar" : tabBar.view]
+		let viewDict = [ "statusBar" : statusBar.view, "navBar" : navBar.containerView!.view!, "searchBar" : searchBar.view, "toolBar" : toolBar.view, "tableView" : tableVC.view, "tabBar" : tabBar.view]
 		
 		let keys = Array(viewDict.keys)
 
