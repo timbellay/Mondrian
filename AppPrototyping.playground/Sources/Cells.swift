@@ -6,10 +6,11 @@ public enum CellType {
 
 public class Cell {
 	public var containerView: ContainerView?
-	public var members: [String : AnyObject]?
-	public var memberData: [String : [AnyObject]]?
+	public var members = [String : AnyObject]()
+	public var memberProperties = [String : [String]]()
+
 	public func addMember(keyName: String, value: AnyObject) {
-		members?[keyName] = value
+		members[keyName] = value
 	}
 	
 	public init(device: Device, cellType: CellType) {
@@ -19,9 +20,10 @@ public class Cell {
 		switch cellType {
 		// TODO: Add other default types of cells in case statement here.
 		case .Simple:
-			let imageView = UIView(width: 29, height: 29, color: .whiteColor())
-			let accessoryView = UIView(width: 29, height: 29, color: .whiteColor())
-			let label = UILabel(text: "cell label", font: Font.bodyText.create(), textColor: .blackColor(), labelColor: .whiteColor())
+			var imageView = UIView(width: 29, height: 29, color: .whiteColor())
+			var accessoryView = UIView(width: 29, height: 29, color: .whiteColor())
+			var label = UILabel(text: "cell label", font: Font.bodyText.create(), textColor: .blackColor(), labelColor: .whiteColor())
+			print("label created: \(label)")
 			label.translatesAutoresizingMaskIntoConstraints = false
 			
 			// Stick imageView to left margin in containerView
@@ -34,12 +36,32 @@ public class Cell {
 			
 			// Stick label to right side of imageView.
 			containerView?.stickSubviewToSubview(label, direction: .Right, subview2: imageView, byAmount: 16, align: .CenterY)
-		
+			
 			members = ["label" : label, "image" : imageView, "accessory" : accessoryView]
+			print("label found in array: \(members["label"])")
+
+			if var text = label.attributedText {
+				memberProperties = ["label" : ["text"]]
+			}
+			
+			
 		}
 	}
 	
-	public init(containerView: ContainerView, members: [String : AnyObject]?) {
+	public func setupCellWithData() {
+		let keys = memberProperties.keys
+//		print("keys: \(keys)")
+		keys.forEach({
+			print("member: \(members[$0]) = member property: \(memberProperties[$0]) ")
+			let array = memberProperties[$0]
+			
+//			print("member property value: \(members[$0].getValue
+			members[$0]?.setNeedsDisplay()
+		})
+		
+	}
+	
+	public init(containerView: ContainerView, members: [String : AnyObject]) {
 		self.containerView = containerView
 		self.members = members
 	}
