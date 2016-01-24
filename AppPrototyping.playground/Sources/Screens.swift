@@ -73,33 +73,6 @@ public enum Device {
 	}
 }
 
-
-class TableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-	
-	var tableView: UITableView!
-	let items = ["Hello 1", "Hello 2", "Hello 3"]
-	
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		self.view.frame = CGRect(x: 0, y: 0, width: 320, height: 480)
-		self.tableView = UITableView(frame:self.view.frame)
-		self.tableView!.dataSource = self
-		self.tableView!.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
-		self.view.addSubview(self.tableView)
-		
-	}
-	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
-		return self.items.count;
-	}
-	
-	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
-		let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as UITableViewCell
-		cell.textLabel?.text = "\(self.items[indexPath.row])"
-		cell.backgroundColor = .purpleColor()
-		return cell
-	}
-}
-
 public struct Screen {
 	public var device: Device = .iPhone6
 	public var screenType: ScreenType = .splash
@@ -162,29 +135,29 @@ public struct Screen {
 	}
 	
 	mutating func list() {
-		let statusBar = StatusBar(frame: .zero, appearance: appearance!)
-		views.append(statusBar.view)
-		let navBar = NavigationBar(frame: .zero, appearance: appearance!, title: "Title")
-		views.append(navBar.containerView!.view!)
-		let searchBar = SearchBar(frame: .zero, appearance: appearance!)
-		views.append(searchBar.view)
-		let tableVC = TableViewController()
-		tableVC.viewDidLoad()
-		tableVC.view.translatesAutoresizingMaskIntoConstraints = false
-		print("tableView: \(tableVC.view)")
 		
-		views.append(tableVC.view)
-		if appearance!.theme == .Light {
-			tableVC.view.backgroundColor = Color.GrayBackground.create()
-		} else {
-			tableVC.view.backgroundColor = .clearColor()
-		}
+		let statusBar = StatusBar(frame: .zero, appearance: appearance!)
+		let navBar = NavigationBar(frame: .zero, appearance: appearance!, title: "Title")
+		let searchBar = SearchBar(frame: .zero, appearance: appearance!)
+		
+		let cell1 = Cell(device: device, cellType: .Simple, appearance: appearance!)
+		let cell2 = Cell(device: device, cellType: .Simple, appearance: appearance!)
+		let tableView = TableView(device: device, width: nil, height: device.frame().height - 64, cells: [cell1, cell2])
+		tableView.view.backgroundColor = appearance?.labelColor()
+	
+		views.append(statusBar.view)
+		views.append(navBar.containerView!.view!)
+		views.append(searchBar.view)
+		views.append(tableView.view)
+
+
 		let toolBar = ToolBar(frame: .zero, appearance: appearance!)
-		views.append(toolBar.view)
 		let tabBar = TabBar(frame: .zero, appearance: appearance!)
+
+		views.append(toolBar.view)
 		views.append(tabBar.view)
 		
-		let viewDict = [ "statusBar" : statusBar.view, "navBar" : navBar.containerView!.view!, "searchBar" : searchBar.view, "toolBar" : toolBar.view, "tableView" : tableVC.view, "tabBar" : tabBar.view]
+		let viewDict = [ "statusBar" : statusBar.view, "navBar" : navBar.containerView!.view!, "searchBar" : searchBar.view, "toolBar" : toolBar.view, "tableView" : tableView.view, "tabBar" : tabBar.view]
 		
 		let keys = Array(viewDict.keys)
 
