@@ -26,8 +26,9 @@ Any suggestions or comments are welcome.
 import UIKit
 import XCPlayground
 
-let device = Device.iPhone6
-let screen = Screen(device: device, type: .list, theme: .dark)
+let device = Device.iPhone5s
+let appearance = Appearance(theme: .Custom, textColor: .yellowColor(), labelColor: .purpleColor())
+let screen = Screen(device: device, type: .list, appearance: appearance)
 XCPlayground.XCPlaygroundPage.currentPage.liveView = screen.view
 ```
 ![ScreenShot](https://raw.github.com/timbellay/Mondrian/master/screens/list.png)
