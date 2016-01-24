@@ -49,6 +49,21 @@ public extension UIView {
 	}
 }
 
+extension UIImage {
+	class func imageWithColor(color: UIColor) -> UIImage {
+		let rect = CGRectMake(0.0, 0.0, 1.0, 1.0)
+		UIGraphicsBeginImageContext(rect.size)
+		let context = UIGraphicsGetCurrentContext()
+		
+		CGContextSetFillColorWithColor(context, color.CGColor)
+		CGContextFillRect(context, rect)
+		
+		let image = UIGraphicsGetImageFromCurrentImageContext()
+		UIGraphicsEndImageContext()
+		
+		return image
+	}
+}
 
 public struct StatusBar {
 	public var view = UIView(frame: .zero)
@@ -80,6 +95,7 @@ public struct StatusBar {
 		let width = frame.size.width
 		let height = CGFloat(20)
 		view.frame = CGRectMake(0, 0, width, height)
+		view.backgroundColor = appearance.labelColor()
 		self.appearance = appearance
 		let smallFont = Font.SmallText.create()
 
@@ -91,7 +107,6 @@ public struct StatusBar {
 		// Signal strength circles.
 		// Draw filled circle and get image.
 		let filledCircle = UIBezierPath(arcCenter: CGPointMake(4, 4), radius: 3, startAngle: 0, endAngle: CGFloat(2*M_PI), clockwise: true)
-		view.backgroundColor = appearance.labelColor()
 		UIGraphicsBeginImageContext(CGSizeMake(8, 8))
 		appearance.setStrokeAndFill()
 		
@@ -103,7 +118,6 @@ public struct StatusBar {
 		
 		// Draw empty circle and get image.
 		let emptyCircle = UIBezierPath(arcCenter: CGPointMake(4, 4), radius: 3, startAngle: 0, endAngle: CGFloat(2*M_PI), clockwise: true)
-		view.backgroundColor = appearance.labelColor()
 		UIGraphicsBeginImageContext(CGSizeMake(8, 8))
 		appearance.setStrokeAndFill()
 
@@ -173,25 +187,21 @@ public struct StatusBar {
 public struct NavigationBar {
 	// TODO: ability to add search bar to the navBar.
 	public var containerView: ContainerView?
-	var backCarrot = UIView(width: 22, height: 22, color: Color.BlueLink.create())
+	var backCarrot = UIView(width: 11, height: 22, color: Color.BlueLink.create())
 	var backLabel: UIView
 	var titleLabel = UILabel()
 	var rightNavItem: UIView
 	
-	public init(frame: CGRect, theme: Theme, title: String) {
+	public init(frame: CGRect, appearance: Appearance, title: String) {
 		containerView = ContainerView(width: frame.width, height: 44, color: .orangeColor(), marginInset: 8)
+		
 		// Make bar elements.
-		if theme == .Light {
-			backLabel = UILabel(text: "Back", font: Font.BodyText.create(), textColor: Color.BlueLink.create(), labelColor: .whiteColor())
-			titleLabel = UILabel(text: title, font: Font.BodyText.create(), textColor: .blackColor(), labelColor: .whiteColor())
-			rightNavItem = UILabel(text: "Action", font: Font.BodyText.create(), textColor: Color.BlueLink.create(), labelColor: .whiteColor())
-			containerView?.view?.backgroundColor = .whiteColor()
-		} else {
-			backLabel = UILabel(text: "Back", font: Font.BodyText.create(), textColor: .whiteColor(), labelColor: .clearColor())
-			titleLabel = UILabel(text: title, font: Font.BodyText.create(), textColor: .whiteColor(), labelColor: .clearColor())
-			rightNavItem = UILabel(text: "Action", font: Font.BodyText.create(), textColor: .whiteColor(), labelColor: .clearColor())
-			containerView?.view?.backgroundColor = .clearColor()
-		}
+		backLabel = UILabel(text: "Back", font: Font.BodyText.create(), textColor: appearance.textColor(), labelColor: appearance.labelColor())
+		titleLabel = UILabel(text: title, font: Font.BodyText.create(), textColor: appearance.textColor(), labelColor: appearance.labelColor())
+		rightNavItem = UILabel(text: "Action", font: Font.BodyText.create(), textColor: appearance.textColor(), labelColor: appearance.labelColor())
+		containerView?.view?.backgroundColor = appearance.labelColor()
+		backCarrot.backgroundColor = appearance.textColor()
+		
 		// Turn off autoResizingMask...
 		backCarrot.translatesAutoresizingMaskIntoConstraints = false
 		backLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -214,7 +224,7 @@ public struct ToolBar {
 	public var view = UIToolbar()
 	public var buttons = [UIBarButtonItem]()
 	
-	public init(frame: CGRect, theme: Theme) {
+	public init(frame: CGRect, appearance: Appearance) {
 		view.frame = CGRectMake(0, 0, frame.size.width, 44)
 
 		let spacer = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
@@ -227,15 +237,11 @@ public struct ToolBar {
 		let button3 = UIBarButtonItem(barButtonSystemItem: .Search, target: nil, action: nil)
 		buttons.append(button3)
 
-		if theme == .Light {
-			view.barTintColor = Color.GrayBackground.create()
-		} else {
-			view.translucent = true
-			view.barTintColor = .clearColor()
-			view.setShadowImage(UIImage(), forToolbarPosition: .Any)
-			buttons.forEach({$0.tintColor = .whiteColor()})
-		}
-	
+		view.barTintColor = appearance.labelColor()
+//		view.setShadowImage(UIImage(), forToolbarPosition: .Any) // Clear the shadow image.
+		view.translucent = false // Bars are defaulted to translucent and gaussian blurred.
+		buttons.forEach({$0.tintColor = appearance.textColor()})
+		
 		view.setItems([spacer, button0, spacer, button1, spacer, button2, spacer, button3, spacer], animated: true)
 	}
 }
@@ -245,22 +251,16 @@ public struct TabBar {
 	public var buttons = [UIBarButtonItem]()
 	public var mainSV: UIStackView?
 	
-	public init(frame: CGRect, theme: Theme) {
+	public init(frame: CGRect, appearance: Appearance) {
 		view.frame = CGRectMake(0, 0, frame.size.width, 44)
 		mainSV = makeHorizontalSV(view)
 		view.addSubview(mainSV!)
+		view.backgroundColor = appearance.labelColor()
 		
-		if theme == .Light {
-			view.backgroundColor = Color.GrayBackground.create()
-	
-		} else {
-			view.backgroundColor = .clearColor()
-		}
-		
-		let barButton0 = Button(theme: theme, imageName: "button", text: "Messaging", type: .Down)
-		let barButton1 = Button(theme: theme, imageName: "button", text: "My Data", type: .Down)
-		let barButton2 = Button(theme: theme, imageName: "button", text: "Info", type: .Down)
-		let barButton3 = Button(theme: theme, imageName: "button", text: "Settings", type: .Down)
+		let barButton0 = Button(appearance: appearance, imageName: "button", text: "Messaging", type: .Down)
+		let barButton1 = Button(appearance: appearance, imageName: "button", text: "My Data", type: .Down)
+		let barButton2 = Button(appearance: appearance, imageName: "button", text: "Info", type: .Down)
+		let barButton3 = Button(appearance: appearance, imageName: "button", text: "Settings", type: .Down)
 		mainSV?.addArrangedSubview(barButton0.view)
 		mainSV?.addArrangedSubview(barButton1.view)
 		mainSV?.addArrangedSubview(barButton2.view)
@@ -272,15 +272,15 @@ public struct TabBar {
 
 public struct SearchBar {
 	var view = UISearchBar()
-	public init(frame: CGRect, theme: Theme) {
-		if theme == .Light {
-			view.barTintColor = Color.GrayBackground.create()
-			view.tintColor = .blackColor()
-		} else {
-			view.barTintColor = .clearColor()
-			view.tintColor = .whiteColor()
-		}
-		view.placeholder = "Search"
+	public init(frame: CGRect, appearance: Appearance) {
+		view.barTintColor = appearance.labelColor()
+		view.tintColor = appearance.textColor()
+		view.backgroundImage = UIImage.imageWithColor(appearance.labelColor())
+		view.placeholder = "search"
 		view.showsCancelButton = true
+		
+		if appearance.theme == .Light {
+			UITextField.appearanceWhenContainedInInstancesOfClasses([UISearchBar.self]).backgroundColor = .lightGrayColor()
+		} // To prevent the search bar text background to be indistinguishable from the white bar background.
 	}
 }

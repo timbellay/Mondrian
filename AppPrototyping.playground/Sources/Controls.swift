@@ -22,18 +22,12 @@ public struct Button {
 	var text: String?
 	var views = [UIView]()
 	
-	public init(theme: Theme, imageName: String, text: String, type: ButtonLabelType) {
+	public init(appearance: Appearance, imageName: String, text: String, type: ButtonLabelType) {
 		self.type = type
 		let font = Font.TabBarText.create()
 		var label = UILabel()
-		if theme == .Light {
-			let gray = Color.GrayBackground.create()
-			view.backgroundColor = gray
-			label = UILabel(text: text, font: font, textColor: Color.BlueLink.create(), labelColor: gray)
-		} else {
-			view.backgroundColor = .clearColor()
-			label = UILabel(text: text, font: font, textColor: .whiteColor(), labelColor: .clearColor())
-		}
+		view.backgroundColor = appearance.labelColor()
+		label = UILabel(text: text, font: font, textColor: appearance.textColor(), labelColor: appearance.labelColor())
 		
 		if let image = UIImage(named: imageName) {
 			let imageView = UIImageView(image: image)

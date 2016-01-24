@@ -164,9 +164,9 @@ public struct Screen {
 	mutating func list() {
 		let statusBar = StatusBar(frame: .zero, appearance: appearance!)
 		views.append(statusBar.view)
-		let navBar = NavigationBar(frame: .zero, theme: appearance!.theme, title: "Title")
+		let navBar = NavigationBar(frame: .zero, appearance: appearance!, title: "Title")
 		views.append(navBar.containerView!.view!)
-		let searchBar = SearchBar(frame: .zero, theme: appearance!.theme)
+		let searchBar = SearchBar(frame: .zero, appearance: appearance!)
 		views.append(searchBar.view)
 		let tableVC = TableViewController()
 		tableVC.viewDidLoad()
@@ -179,9 +179,9 @@ public struct Screen {
 		} else {
 			tableVC.view.backgroundColor = .clearColor()
 		}
-		let toolBar = ToolBar(frame: .zero, theme: appearance!.theme)
+		let toolBar = ToolBar(frame: .zero, appearance: appearance!)
 		views.append(toolBar.view)
-		let tabBar = TabBar(frame: .zero, theme: appearance!.theme)
+		let tabBar = TabBar(frame: .zero, appearance: appearance!)
 		views.append(tabBar.view)
 		
 		let viewDict = [ "statusBar" : statusBar.view, "navBar" : navBar.containerView!.view!, "searchBar" : searchBar.view, "toolBar" : toolBar.view, "tableView" : tableVC.view, "tabBar" : tabBar.view]
