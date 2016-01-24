@@ -9,51 +9,107 @@
 import UIKit
 
 public enum Color {
-	case darkText, lightText, blueLink, grayBackground, grayLine, pink, clear
+	case DarkText, LightText, BlueLink, GrayBackground, GrayLine, Pink, Clear
 	
 	public func create() -> UIColor {
 		switch self {
-		case darkText:
+		case DarkText:
 			return UIColor.darkTextColor()
-		case lightText:
+		case LightText:
 			return UIColor.lightTextColor()
-		case blueLink:
+		case BlueLink:
 			return UIColor(red: 0, green: 122/255, blue: 255/255, alpha: 1)
-		case grayBackground:
+		case GrayBackground:
 			return UIColor(red: 239/255, green: 239/255, blue: 244/255, alpha: 1)
-		case grayLine:
+		case GrayLine:
 			return UIColor(red: 206/255, green: 206/255, blue: 210/255, alpha: 1)
-		case pink:
+		case Pink:
 			return UIColor(red: 255/255, green: 20/255, blue: 147/255, alpha: 1)
-		case clear:
+		case Clear:
 			return UIColor.clearColor()
 		}
 	}
 }
 
 public enum Theme {
-	/*
-	A light Bar has a light (often gray background) with a dark title (or status) text color.
-	A dark one has a transparent background (showing the dark theme below) and has light color text.
-	A transparent one can be used as a prototype to add a custom background image to the NavigationBar.
-	*/
-	case dark, light, transparent
+	case Dark, Light, DarkTransparent, LightTransparent, Custom
 }
 
+public struct Appearance {
+	public var theme: Theme
+	var customTextColor: UIColor?
+	var customLabelColor: UIColor?
+	
+	public init(theme: Theme, textColor: UIColor?, labelColor: UIColor?) {
+		self.theme = theme
+		customTextColor = textColor
+		customLabelColor = labelColor
+	}
+	
+	public func textColor() -> UIColor {
+		var color: UIColor = .blackColor()
+		switch theme {
+		case .Dark, .DarkTransparent:
+			color = .whiteColor()
+		case .Light, .LightTransparent:
+			color = .blackColor()
+		case .Custom:
+			if let customColor = customTextColor {
+				color = customColor
+			}
+		}
+		return color
+	}
+	
+	public func labelColor() -> UIColor {
+		var color: UIColor = .blackColor()
+		switch theme {
+		case .Dark:
+			color = .blackColor()
+		case .Light:
+			color = .whiteColor()
+		case .DarkTransparent, .LightTransparent:
+			color = .clearColor()
+		case .Custom:
+			if let customColor = customLabelColor {
+				color = customColor
+			}
+		}
+		return color
+	}
+	
+	public func setStrokeAndFill() {
+		switch theme {
+		case .Light, .LightTransparent:
+			UIColor.blackColor().setStroke()
+			UIColor.blackColor().setFill()
+		case .Dark, .DarkTransparent:
+			UIColor.whiteColor().setStroke()
+			UIColor.whiteColor().setFill()
+		case .Custom:
+			customTextColor?.setStroke()
+			customTextColor?.setFill()
+		}
+	}
+	
+}
+
+
+
 public enum Font {
-	case button, titleText, bodyText, smalltext, tabBarText
+	case Button, TitleText, BodyText, SmallText, TabBarText
 	
 	public func create() -> UIFont {
 		switch self {
-		case button:
+		case Button:
 			return UIFont.systemFontOfSize(17)
-		case titleText:
+		case TitleText:
 			return UIFont.systemFontOfSize(20)
-		case bodyText:
+		case BodyText:
 			return UIFont.systemFontOfSize(17)
-		case smalltext:
+		case SmallText:
 			return UIFont.systemFontOfSize(12)
-		case tabBarText:
+		case TabBarText:
 			return UIFont.systemFontOfSize(10)
 		}
 	}

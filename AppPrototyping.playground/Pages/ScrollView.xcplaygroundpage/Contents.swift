@@ -7,7 +7,8 @@ let device = Device.iPhone6Plus
 let frame = device.frame()
 let view = UIView(frame: frame)
 let sv = makeVerticalSV(view)
-let statusBar = StatusBar(frame: frame, theme: .light)
+let appearance = Appearance(theme: .Light, textColor: nil, labelColor: nil)
+let statusBar = StatusBar(frame: frame, appearance: appearance)
 sv.addArrangedSubview(statusBar.view)
 horizontalStrechToParentView(statusBar.view)
 
@@ -16,7 +17,7 @@ sv.addArrangedSubview(svc.view)
 svc.center()
 svc.scroll(.Left, amount: 100)
 
-let tabbar = TabBar(frame: frame, theme: .light)
+let tabbar = TabBar(frame: frame, theme: .Light)
 sv.addArrangedSubview(tabbar.view)
 
 XCPlaygroundPage.currentPage.liveView = view

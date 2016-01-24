@@ -8,7 +8,7 @@ let device = Device.iPhone4s; let frame = device.frame()
 var cell1 = Cell(device: device, cellType: .Simple)
 cell1.members
 
-var otherLabel = UILabel(text: "Tim", font: Font.smalltext.create(), textColor: .whiteColor(), labelColor: .blackColor())
+var otherLabel = UILabel(text: "Tim", font: Font.SmallText.create(), textColor: .whiteColor(), labelColor: .blackColor())
 
 cell1.members["label"] // = otherLabel
 

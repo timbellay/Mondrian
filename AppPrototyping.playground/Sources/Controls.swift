@@ -24,12 +24,12 @@ public struct Button {
 	
 	public init(theme: Theme, imageName: String, text: String, type: ButtonLabelType) {
 		self.type = type
-		let font = Font.tabBarText.create()
+		let font = Font.TabBarText.create()
 		var label = UILabel()
-		if theme == .light {
-			let gray = Color.grayBackground.create()
+		if theme == .Light {
+			let gray = Color.GrayBackground.create()
 			view.backgroundColor = gray
-			label = UILabel(text: text, font: font, textColor: Color.blueLink.create(), labelColor: gray)
+			label = UILabel(text: text, font: font, textColor: Color.BlueLink.create(), labelColor: gray)
 		} else {
 			view.backgroundColor = .clearColor()
 			label = UILabel(text: text, font: font, textColor: .whiteColor(), labelColor: .clearColor())
