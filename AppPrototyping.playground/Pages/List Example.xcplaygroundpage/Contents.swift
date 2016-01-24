@@ -8,7 +8,7 @@ import UIKit
 import XCPlayground
 
 let device = Device.iPhone5s
-let appearance = Appearance(theme: .Dark, textColor: nil, labelColor: nil)
+let appearance = Appearance(theme: .Custom, textColor: .yellowColor(), labelColor: .purpleColor())
 let screen = Screen(device: device, type: .list, appearance: appearance)
 screen.view.frame
 

@@ -13,16 +13,16 @@ public class Cell {
 		members[keyName] = value
 	}
 	
-	public init(device: Device, cellType: CellType) {
+	public init(device: Device, cellType: CellType, appearance: Appearance) {
 		let deviceFrame = device.frame()
-		containerView = ContainerView(width: deviceFrame.width, height: 44, color: .whiteColor(), marginInset: 8)
+		containerView = ContainerView(width: deviceFrame.width, height: 44, color: appearance.labelColor(), marginInset: 8)
 
 		switch cellType {
 		// TODO: Add other default types of cells in case statement here.
 		case .Simple:
-			var imageView = UIView(width: 29, height: 29, color: .whiteColor())
-			var accessoryView = UIView(width: 29, height: 29, color: .whiteColor())
-			var label = UILabel(text: "cell label", font: Font.BodyText.create(), textColor: .blackColor(), labelColor: .whiteColor())
+			let imageView = UIView(width: 29, height: 29, color: appearance.labelColor())
+			let accessoryView = UIView(width: 29, height: 29, color: appearance.labelColor())
+			let label = UILabel(text: "cell label", font: Font.BodyText.create(), textColor: appearance.textColor(), labelColor: appearance.labelColor())
 			print("label created: \(label)")
 			label.translatesAutoresizingMaskIntoConstraints = false
 			
@@ -39,11 +39,6 @@ public class Cell {
 			
 			members = ["label" : label, "image" : imageView, "accessory" : accessoryView]
 			print("label found in array: \(members["label"])")
-
-			if var text = label.attributedText {
-				memberProperties = ["label" : ["text"]]
-			}
-			
 			
 		}
 	}
@@ -53,8 +48,6 @@ public class Cell {
 //		print("keys: \(keys)")
 		keys.forEach({
 			print("member: \(members[$0]) = member property: \(memberProperties[$0]) ")
-			let array = memberProperties[$0]
-			
 //			print("member property value: \(members[$0].getValue
 			members[$0]?.setNeedsDisplay()
 		})

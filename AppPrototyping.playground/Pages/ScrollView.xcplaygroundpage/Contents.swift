@@ -17,7 +17,7 @@ sv.addArrangedSubview(svc.view)
 svc.center()
 svc.scroll(.Left, amount: 100)
 
-let tabbar = TabBar(frame: frame, theme: .Light)
+let tabbar = TabBar(frame: frame, appearance: appearance)
 sv.addArrangedSubview(tabbar.view)
 
 XCPlaygroundPage.currentPage.liveView = view
