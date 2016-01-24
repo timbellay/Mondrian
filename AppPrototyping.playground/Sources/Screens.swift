@@ -73,6 +73,7 @@ public enum Device {
 	}
 }
 
+
 class TableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 	
 	var tableView: UITableView!
@@ -100,19 +101,29 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
 }
 
 public struct Screen {
-	public var screenType: ScreenType = .splash
 	public var device: Device = .iPhone6
-	public var theme: Theme = .dark
-	public var orientation: UIDeviceOrientation = .Portrait
+	public var screenType: ScreenType = .splash
+	public var appearance: Appearance?
 	public var view = UIView()
 	public var mainSV: UIStackView?
 	public var views = [UIView]()
+	var statusBar: StatusBar? = nil
+	var navBar: NavigationBar? = nil
+	var customViews: [ScrollView]? = nil
+	var tableViews: [TableView]? = nil
+	var collectionViews: [ScrollView]? = nil // TODO: add CollectionView Class.
+	var toolbars: [ToolBar]? = nil
+	var tabBar: TabBar? = nil
+//	var popOvers: [PopOver]? = nil // TODO: add PopOver Class.
+//	var systemNotifications: [SystemNotificaiton]? = nil // TODO: add SystemNotificaiton Class.
+//	var alertViews: [AlertView]? = nil // TODO: add AlertView Class.
+//	var activityIndicators: [ActivityIndicator]? = nill // TODO: add ActivityIndicator Class.
 	
-	public init(device: Device, type: ScreenType, theme: Theme) {
+	public init(device: Device, type: ScreenType, appearance: Appearance) {
 		self.device = device
 		view.frame = device.frame()
 		self.screenType = type
-		self.theme = theme
+		self.appearance = appearance
 		mainSV = makeVerticalSV(view)
 		mainSV!.distribution = .Fill
 
@@ -134,10 +145,10 @@ public struct Screen {
 		}
 	}
 
-	public init(device: Device, type: ScreenType, imageName: String) {
-		self.init(device: device, type: type, theme: .dark)
+	public init(device: Device, type: ScreenType, imageName: String, appearance: Appearance) {
+		self.init(device: device, type: type, appearance: appearance)
 		splash(imageName)
-		let statusBar = StatusBar(frame: view.frame, theme: .dark)
+		let statusBar = StatusBar(frame: view.frame, appearance: appearance)
 		view.addSubview(statusBar.view)
 	}
 	
@@ -151,12 +162,11 @@ public struct Screen {
 	}
 	
 	mutating func list() {
-
-		let statusBar = StatusBar(frame: .zero, theme: theme)
+		let statusBar = StatusBar(frame: .zero, appearance: appearance!)
 		views.append(statusBar.view)
-		let navBar = NavigationBar(frame: .zero, theme: theme, title: "Title")
+		let navBar = NavigationBar(frame: .zero, theme: appearance!.theme, title: "Title")
 		views.append(navBar.containerView!.view!)
-		let searchBar = SearchBar(frame: .zero, theme: theme)
+		let searchBar = SearchBar(frame: .zero, theme: appearance!.theme)
 		views.append(searchBar.view)
 		let tableVC = TableViewController()
 		tableVC.viewDidLoad()
@@ -164,14 +174,14 @@ public struct Screen {
 		print("tableView: \(tableVC.view)")
 		
 		views.append(tableVC.view)
-		if theme == .light {
-			tableVC.view.backgroundColor = Color.grayBackground.create()
+		if appearance!.theme == .Light {
+			tableVC.view.backgroundColor = Color.GrayBackground.create()
 		} else {
 			tableVC.view.backgroundColor = .clearColor()
 		}
-		let toolBar = ToolBar(frame: .zero, theme: theme)
+		let toolBar = ToolBar(frame: .zero, theme: appearance!.theme)
 		views.append(toolBar.view)
-		let tabBar = TabBar(frame: .zero, theme: theme)
+		let tabBar = TabBar(frame: .zero, theme: appearance!.theme)
 		views.append(tabBar.view)
 		
 		let viewDict = [ "statusBar" : statusBar.view, "navBar" : navBar.containerView!.view!, "searchBar" : searchBar.view, "toolBar" : toolBar.view, "tableView" : tableVC.view, "tabBar" : tabBar.view]

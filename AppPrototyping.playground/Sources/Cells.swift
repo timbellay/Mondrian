@@ -22,7 +22,7 @@ public class Cell {
 		case .Simple:
 			var imageView = UIView(width: 29, height: 29, color: .whiteColor())
 			var accessoryView = UIView(width: 29, height: 29, color: .whiteColor())
-			var label = UILabel(text: "cell label", font: Font.bodyText.create(), textColor: .blackColor(), labelColor: .whiteColor())
+			var label = UILabel(text: "cell label", font: Font.BodyText.create(), textColor: .blackColor(), labelColor: .whiteColor())
 			print("label created: \(label)")
 			label.translatesAutoresizingMaskIntoConstraints = false
 			

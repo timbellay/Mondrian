@@ -56,7 +56,7 @@ public struct StatusBar {
 	var carrierSV: UIStackView?
 	var circleSV: UIStackView?
 	var outline: Bool = false
-	var theme: Theme = .light
+	var appearance: Appearance
 	var labels = [UILabel]()
 	var carrierSignalStrength = 3 // range: 0 - 5.
 	var batteryPercentage = 58 // range: 0 - 100.
@@ -64,10 +64,10 @@ public struct StatusBar {
 	public var navigation: String? {
 		didSet {
 			if let navString = navigation {
-				if theme == .light {
-					navigationLabel = UILabel(text: navString, font: Font.smalltext.create(), textColor: .blackColor(), labelColor: .whiteColor())
+				if appearance.theme == .Light {
+					navigationLabel = UILabel(text: navString, font: Font.SmallText.create(), textColor: appearance.textColor(), labelColor: appearance.labelColor())
 				} else {
-					navigationLabel = UILabel(text: navString, font: Font.smalltext.create(), textColor: .whiteColor(), labelColor: .blackColor())
+					navigationLabel = UILabel(text: navString, font: Font.SmallText.create(), textColor: appearance.textColor(), labelColor: appearance.labelColor())
 				}
 				carrierSV?.hidden = true
 			} else {
@@ -76,14 +76,14 @@ public struct StatusBar {
 		}
 	}
 
-	public init(frame: CGRect, theme: Theme) {
+	public init(frame: CGRect, appearance: Appearance) {
 		let width = frame.size.width
 		let height = CGFloat(20)
 		view.frame = CGRectMake(0, 0, width, height)
-		self.theme = theme
-		let smallFont = Font.smalltext.create()
-		let gray = Color.grayBackground.create()
+		self.appearance = appearance
+		let smallFont = Font.SmallText.create()
 
+		// TODO: replace horizontal stackViews and build with UILayoutGuide.
 		mainSV = makeHorizontalSV(view)
 		carrierSV = makeHorizontalSV(mainSV!)
 		circleSV = makeHorizontalSV(carrierSV!)
@@ -91,16 +91,10 @@ public struct StatusBar {
 		// Signal strength circles.
 		// Draw filled circle and get image.
 		let filledCircle = UIBezierPath(arcCenter: CGPointMake(4, 4), radius: 3, startAngle: 0, endAngle: CGFloat(2*M_PI), clockwise: true)
+		view.backgroundColor = appearance.labelColor()
 		UIGraphicsBeginImageContext(CGSizeMake(8, 8))
-		if theme == .light {
-			view.backgroundColor = Color.grayBackground.create()
-			UIColor.blackColor().setStroke()
-			UIColor.blackColor().setFill()
-		} else {
-			view.backgroundColor = .clearColor()
-			UIColor.whiteColor().setStroke()
-			UIColor.whiteColor().setFill()
-		}
+		appearance.setStrokeAndFill()
+		
 		filledCircle.lineWidth = 1
 		filledCircle.fill()
 		filledCircle.stroke()
@@ -109,14 +103,10 @@ public struct StatusBar {
 		
 		// Draw empty circle and get image.
 		let emptyCircle = UIBezierPath(arcCenter: CGPointMake(4, 4), radius: 3, startAngle: 0, endAngle: CGFloat(2*M_PI), clockwise: true)
+		view.backgroundColor = appearance.labelColor()
 		UIGraphicsBeginImageContext(CGSizeMake(8, 8))
-		if theme == .light {
-			view.backgroundColor = gray
-			UIColor.blackColor().setStroke()
-		} else {
-			view.backgroundColor = .clearColor()
-			UIColor.whiteColor().setStroke()
-		}
+		appearance.setStrokeAndFill()
+
 		emptyCircle.lineWidth = 1
 		emptyCircle.stroke()
 		let emptyCircleImage = UIGraphicsGetImageFromCurrentImageContext()
@@ -159,15 +149,8 @@ public struct StatusBar {
 		let batteryCapPath = UIBezierPath(rect: CGRectMake(CGFloat(batteryBodyWidth + 2), 7, 2.5, 5))
 		let batteryRemainingPath = UIBezierPath(rect: CGRectMake(3.5, 6, CGFloat((batteryBodyWidth - 2) * batteryPercentage / 100), 8))
 		
-		if theme == .light {
-			view.backgroundColor = gray
-			UIColor.blackColor().setStroke()
-			UIColor.blackColor().setFill()
-		} else {
-			view.backgroundColor = .clearColor()
-			UIColor.whiteColor().setStroke()
-			UIColor.whiteColor().setFill()
-		}
+		view.backgroundColor = appearance.labelColor()
+		appearance.setStrokeAndFill()
 		batteryBodyPath.lineWidth = 1
 		batteryCapPath.lineWidth = 1
 		batteryBodyPath.stroke()
@@ -182,18 +165,15 @@ public struct StatusBar {
 		let batteryView = UIImageView(image: batteryImage)
 		batterySV.addArrangedSubview(batteryView)
 		
-		if theme == .light {
-			labels.forEach({$0.textColor = .blackColor()})
-		} else {
-			labels.forEach({$0.textColor = .whiteColor()})
-		}
+		labels.forEach({$0.textColor = appearance.textColor()})
+		
 	}
 }
 
 public struct NavigationBar {
 	// TODO: ability to add search bar to the navBar.
 	public var containerView: ContainerView?
-	var backCarrot = UIView(width: 22, height: 22, color: Color.blueLink.create())
+	var backCarrot = UIView(width: 22, height: 22, color: Color.BlueLink.create())
 	var backLabel: UIView
 	var titleLabel = UILabel()
 	var rightNavItem: UIView
@@ -201,15 +181,15 @@ public struct NavigationBar {
 	public init(frame: CGRect, theme: Theme, title: String) {
 		containerView = ContainerView(width: frame.width, height: 44, color: .orangeColor(), marginInset: 8)
 		// Make bar elements.
-		if theme == .light {
-			backLabel = UILabel(text: "Back", font: Font.bodyText.create(), textColor: Color.blueLink.create(), labelColor: .whiteColor())
-			titleLabel = UILabel(text: title, font: Font.bodyText.create(), textColor: .blackColor(), labelColor: .whiteColor())
-			rightNavItem = UILabel(text: "Action", font: Font.bodyText.create(), textColor: Color.blueLink.create(), labelColor: .whiteColor())
+		if theme == .Light {
+			backLabel = UILabel(text: "Back", font: Font.BodyText.create(), textColor: Color.BlueLink.create(), labelColor: .whiteColor())
+			titleLabel = UILabel(text: title, font: Font.BodyText.create(), textColor: .blackColor(), labelColor: .whiteColor())
+			rightNavItem = UILabel(text: "Action", font: Font.BodyText.create(), textColor: Color.BlueLink.create(), labelColor: .whiteColor())
 			containerView?.view?.backgroundColor = .whiteColor()
 		} else {
-			backLabel = UILabel(text: "Back", font: Font.bodyText.create(), textColor: .whiteColor(), labelColor: .clearColor())
-			titleLabel = UILabel(text: title, font: Font.bodyText.create(), textColor: .whiteColor(), labelColor: .clearColor())
-			rightNavItem = UILabel(text: "Action", font: Font.bodyText.create(), textColor: .whiteColor(), labelColor: .clearColor())
+			backLabel = UILabel(text: "Back", font: Font.BodyText.create(), textColor: .whiteColor(), labelColor: .clearColor())
+			titleLabel = UILabel(text: title, font: Font.BodyText.create(), textColor: .whiteColor(), labelColor: .clearColor())
+			rightNavItem = UILabel(text: "Action", font: Font.BodyText.create(), textColor: .whiteColor(), labelColor: .clearColor())
 			containerView?.view?.backgroundColor = .clearColor()
 		}
 		// Turn off autoResizingMask...
@@ -247,8 +227,8 @@ public struct ToolBar {
 		let button3 = UIBarButtonItem(barButtonSystemItem: .Search, target: nil, action: nil)
 		buttons.append(button3)
 
-		if theme == .light {
-			view.barTintColor = Color.grayBackground.create()
+		if theme == .Light {
+			view.barTintColor = Color.GrayBackground.create()
 		} else {
 			view.translucent = true
 			view.barTintColor = .clearColor()
@@ -270,8 +250,8 @@ public struct TabBar {
 		mainSV = makeHorizontalSV(view)
 		view.addSubview(mainSV!)
 		
-		if theme == .light {
-			view.backgroundColor = Color.grayBackground.create()
+		if theme == .Light {
+			view.backgroundColor = Color.GrayBackground.create()
 	
 		} else {
 			view.backgroundColor = .clearColor()
@@ -293,8 +273,8 @@ public struct TabBar {
 public struct SearchBar {
 	var view = UISearchBar()
 	public init(frame: CGRect, theme: Theme) {
-		if theme == .light {
-			view.barTintColor = Color.grayBackground.create()
+		if theme == .Light {
+			view.barTintColor = Color.GrayBackground.create()
 			view.tintColor = .blackColor()
 		} else {
 			view.barTintColor = .clearColor()

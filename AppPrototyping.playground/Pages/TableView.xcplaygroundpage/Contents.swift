@@ -4,43 +4,12 @@ import UIKit
 import XCPlayground
 
 
-public class TableView: ScrollView {
-	var subStackView: UIStackView?
-	var tableViewHeightAnchor: CGFloat?
-	var tableViewWidthAnchor: CGFloat?
-	public var cells: [Cell]?
-
-	public init(device: Device, width: CGFloat?, height: CGFloat?, cells: [Cell]?) {
-		super.init(device: device, imageName: nil, scrollDirection: .Vertical, width: width, height: height)
-		self.cells = cells
-		view.backgroundColor = .clearColor()
-		//setup stackview
-		let sv = makeVerticalSV(view)
-		subStackView = sv
-		setTheTable()
-	}
-	
-	func setTheTable() {
-		if let cellArray = cells {
-			cellArray.forEach({
-				if let v = $0.containerView?.view {
-				subStackView?.addArrangedSubview(v)
-				print("Adding cell view \(v) to stackview")
-				}
-			})
-		}
-	
-	}
-	
-	public func addCell(cell: Cell) {
-		cells?.append(cell)
-	}
-}
 
 let device = Device.iPhone5s
 let frame = device.frame()
-let statusbar = StatusBar(frame: device.frame(), theme: .light)
-let navbar = NavigationBar(frame: frame, theme: .light, title: "Simple Table")
+let appearance = Appearance(theme: .Light, textColor: nil, labelColor: nil)
+let statusbar = StatusBar(frame: device.frame(), appearance: appearance)
+let navbar = NavigationBar(frame: frame, theme: .Light, title: "Simple Table")
 
 let cell1 = Cell(device: device, cellType: .Simple)
 let cell2 = Cell(device: device, cellType: .Simple)
