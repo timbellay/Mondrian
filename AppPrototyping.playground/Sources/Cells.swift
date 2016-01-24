@@ -20,8 +20,16 @@ public class Cell {
 		switch cellType {
 		// TODO: Add other default types of cells in case statement here.
 		case .Simple:
-			let imageView = UIView(width: 29, height: 29, color: appearance.labelColor())
-			let accessoryView = UIView(width: 29, height: 29, color: appearance.labelColor())
+			let lineView = UIView(width: deviceFrame.width - 44, height: 1, color: appearance.textColor())
+			containerView?.stickSubviewToInsideMargin(.Bottom, subview: lineView, byAmount: 8)
+			containerView?.stickSubviewToInsideMargin(.Right, subview: lineView, byAmount: 8)
+			
+			let imageView = UIView(width: 29, height: 29, color: appearance.textColor())
+			imageView.layer.borderColor = appearance.textColor().CGColor
+			imageView.layer.cornerRadius = 8
+			let accessoryView = UIView(width: 29, height: 29, color: appearance.textColor())
+			accessoryView.layer.borderColor = appearance.textColor().CGColor
+			accessoryView.layer.cornerRadius = 8
 			let label = UILabel(text: "cell label", font: Font.BodyText.create(), textColor: appearance.textColor(), labelColor: appearance.labelColor())
 			print("label created: \(label)")
 			label.translatesAutoresizingMaskIntoConstraints = false

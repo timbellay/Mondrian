@@ -10,13 +10,8 @@ import XCPlayground
 let device = Device.iPhone5s
 let appearance = Appearance(theme: .Custom, textColor: .yellowColor(), labelColor: .purpleColor())
 let screen = Screen(device: device, type: .list, appearance: appearance)
-screen.view.frame
-
 XCPlayground.XCPlaygroundPage.currentPage.liveView = screen.view
-XCPlaygroundPage.currentPage.needsIndefiniteExecution = true
-
-screen.mainSV?.subviews.count
-
+//XCPlaygroundPage.currentPage.needsIndefiniteExecution = true
 //outlineViews(screen.views, outlineColor: .blueColor())
 
 
